@@ -13,12 +13,16 @@ class tempDefact extends Model
     protected $fillable = [
         'idPart',
         'idColor',
-        'idTypeDefact',
+        'idItemDefact',
         'itemDefact',
         'idShift',
+        'keterangan_defact',
+        "idLine",
         'idNPKQ1',
 
     ];
+
+    
 
     public function part()
     {

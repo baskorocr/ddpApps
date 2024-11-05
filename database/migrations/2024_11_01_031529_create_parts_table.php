@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('item');
 
          
-            $table->foreign('idType')->references('id')->on('type_parts')->onDelete('cascade')->onUpdate('cascade ');
+            $table->foreign('idType')->references('id')->on('type_parts')->onDelete('cascade')->onUpdate('cascade');
        
 
         });

@@ -17,14 +17,14 @@ return new class extends Migration {
             $table->unsignedBigInteger('idStatusOK');
             $table->unsignedBigInteger('idShift');
             $table->string('keterangan_OK');
-            $table->string('idNPKQ2');
+            $table->string('idNPK');
             $table->unsignedBigInteger('idLine');
             $table->foreign('idLine')->references('id')->on('lines')->onDelete('cascade')->onUpdate('cascade');
 
 
 
 
-            $table->foreign('idNPKQ2')->references('npk')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('idNPK')->references('npk')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idStatusOK')->references('id')->on('status_oks')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idPart')->references('id')->on('parts')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idColor')->references('id')->on('colors')->onDelete('cascade')->onUpdate('cascade');

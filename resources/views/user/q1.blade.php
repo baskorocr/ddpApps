@@ -78,7 +78,7 @@
                     <form class="defact-form">
                         @csrf
                         <input type="hidden" name="idStatus" value="1">
-                        <input type="hidden" name="itemDefact" value="ok">
+                        <input type="hidden" name="nameTypeDefact" value="ok">
                         <button
                             class="mb-4 bg-green-500 text-white text-center p-8 text-4xl font-bold rounded mt-4 w-full">
                             OK
@@ -88,10 +88,12 @@
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
 
 
-                        @foreach ($group[0]->itemDefacts as $defact)
+                      @foreach ($group[0]->itemDefacts as $index => $defact)
                             <form class="defact-form">
                                 @csrf
-                                <input type="hidden" name="idTypeDefact" value="{{ $group[0]->idTypeDefact }}">
+                                <input type="hidden" name="idItemDefact" value="{{ $idItemDefactsArray[$index] }}">
+
+                                <input type="hidden" name="nameTypeDefact" value="{{ $group[0]->nameType }}">
                                 <input type="hidden" name="itemDefact" value="{{ $defact }}">
                                 <x-button type="submit"
                                     class="bg-blue-500 text-white hover:bg-blue-600 py-5 w-full text-base font-semibold">
@@ -108,15 +110,21 @@
                 <div>
                     <h2 class="text-lg font-semibold mb-4">Repaint</h2>
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
-                        @foreach ($group[1]->itemDefacts as $defact)
-                            <form class="defact-form">
-                                @csrf
-                                <input type="hidden" name="idTypeDefact" value="{{ $group[1]->idTypeDefact }}">
-                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button
-                                    class="bg-yellow-500 text-white hover:bg-yellow-600 py-5 w-full text-base font-semibold">{{ $defact }}</x-button>
-                            </form>
-                        @endforeach
+                        
+                      
+                        @foreach ($group[1]->itemDefacts as $index => $defact)
+                        <form class="defact-form">
+                            @csrf
+                            <input type="hidden" name="idItemDefact" value="{{ $idItemDefactsArrayGroup1[$index] }}">
+
+                            <input type="hidden" name="nameTypeDefact" value="{{ $group[1]->nameType }}">
+                            <input type="hidden" name="itemDefact" value="{{ $defact }}">
+                            <x-button type="submit"
+                                class="bg-yellow-500 text-white hover:bg-yellow-600 py-5 w-full text-base font-semibold">
+                                {{ $defact }}
+                            </x-button>
+                        </form>
+                    @endforeach
                     </div>
                 </div>
 
@@ -125,15 +133,19 @@
                     <h2 class="text-lg font-semibold mb-4">Out Total</h2>
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
 
-                        @foreach ($group[2]->itemDefacts as $defact)
-                            <form class="defact-form">
-                                @csrf
-                                <input type="hidden" name="idTypeDefact" value="{{ $group[2]->idTypeDefact }}">
-                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button
-                                    class="bg-red-500 text-white hover:bg-red-600 py-5 w-full text-base font-semibold">{{ $defact }}</x-button>
-                            </form>
-                        @endforeach
+                        @foreach ($group[2]->itemDefacts as $index => $defact)
+                        <form class="defact-form">
+                            @csrf
+                            <input type="hidden" name="idItemDefact" value="{{ $idItemDefactsArrayGroup2[$index] }}">
+
+                            <input type="hidden" name="nameTypeDefact" value="{{ $group[2]->nameType }}">
+                            <input type="hidden" name="itemDefact" value="{{ $defact }}">
+                            <x-button type="submit"
+                                class="bg-red-500 text-white hover:bg-red-600 py-5 w-full text-base font-semibold">
+                                {{ $defact }}
+                            </x-button>
+                        </form>
+                    @endforeach
                     </div>
                 </div>
             </div>
@@ -174,10 +186,10 @@
 
                 // Add additional data
                 const additionalData = {
-                    part_type: $('#part_type').val(),
+              
                     idPart: $('#part_name').val(),
                     idColor: $('#color').val(),
-                    // line: $('#line').val(), // Added line data
+                    line: $('#line').val(), // Added line data
                     idShift: $('#shift').val(), // Added shift data
                     inspector_npk: {{ auth()->user()->npk }},
                     date: $('#date').val(),

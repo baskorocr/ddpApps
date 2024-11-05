@@ -11,12 +11,14 @@ class outTotal extends Model
 
 
     protected $fillable = [
-        'idPart',
+     'idPart',
         'idColor',
+        'idItemDefact',
+        'itemDefact',
         'idShift',
-        'idNPK',
-        'created_at',
-        'updated_at',
+        'keterangan_defact',
+        "idLine",
+        'idNPKQ2',
 
 
     ];

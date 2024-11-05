@@ -12,9 +12,11 @@ class fixProses extends Model
     protected $fillable = [
         'idPart',
         'idColor',
-        'idStatus',
+        'idStatusOK',
         'idShift',
         'idNPK',
+        'keterangan_OK',
+        "idLine",
         'created_at',
         'updated_at',
     ];

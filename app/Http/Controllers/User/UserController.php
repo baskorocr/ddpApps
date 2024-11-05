@@ -156,18 +156,25 @@ class UserController extends Controller
         $lines = line::all();
         $colors = Colors::all();
         $shifts = shift::all();
-        $group = itemDefects::select('idTypeDefact')
-            ->selectRaw('GROUP_CONCAT(itemDefact SEPARATOR ", ") AS itemDefacts')
-            ->groupBy('idTypeDefact')
-            ->get();
+        $group = itemDefects::select('item_defects.idTypeDefact', 'type_defects.type as nameType')
+        ->selectRaw('GROUP_CONCAT(item_defects.id SEPARATOR ", ") AS idItemDefacts')
+        ->selectRaw('GROUP_CONCAT(item_defects.itemDefact SEPARATOR ", ") AS itemDefacts')
+        ->join('type_defects', 'item_defects.idTypeDefact', '=', 'type_defects.id')
+        ->groupBy('item_defects.idTypeDefact', 'type_defects.type')
+        ->get();
 
+    
+        $idItemDefactsArray = explode(', ', $group[0]->idItemDefacts);
+        $idItemDefactsArrayGroup1 = explode(', ', $group[1]->idItemDefacts);
+        $idItemDefactsArrayGroup2 = explode(', ', $group[2]->idItemDefacts);
+       
 
 
         foreach ($group as $item) {
             // Memecah string menjadi array
             $item->itemDefacts = explode(', ', $item->itemDefacts);
         }
-        return view('user.q1', compact('types', 'lines', 'colors', 'group', 'shifts'));
+        return view('user.q1', compact('types', 'lines', 'colors', 'group', 'shifts', 'idItemDefactsArray','idItemDefactsArrayGroup1','idItemDefactsArrayGroup2'));
     }
     public function q2()
     {
@@ -207,14 +214,15 @@ class UserController extends Controller
     public function storeReqQ1(Request $request)
     {
 
+
         $validator = \Validator::make($request->all(), [
-            'itemDefact' => 'required|string',
-            'part_type' => 'required|string',
+            'idItemDefact' => 'required|string',
             'idPart' => 'required|integer',
             'idColor' => 'required|string',
             'inspector_npk' => 'required|string',
             'date' => 'required|date',
-            'idShift' => 'required|integer'
+            'idShift' => 'required|integer',
+            'itemDefact' => 'required|string',
 
             // 'line' => 'required|string', // Ensure line is validated
         ]);
@@ -222,6 +230,7 @@ class UserController extends Controller
 
         $valid = $validator->validated();
 
+        $itemDefact = $request->input('itemDefact');
 
 
 
@@ -233,17 +242,19 @@ class UserController extends Controller
 
 
 
-        if ($valid['itemDefact'] == 'ok') { //jika ok masuk table fix utk rsp
+
+        if ($request->input('nameTypeDefact') == 'ok') { //jika ok masuk table fix utk rsp
 
             fixProses::create([
-                'idStatus' => $request->input('idStatus'),
+                'idStatusOK' => $request->input('idStatus'),
                 'idPart' => $valid['idPart'],
                 'idColor' => $valid['idColor'],
                 'idShift' => $valid['idShift'],
                 'idNPK' => $valid['inspector_npk'],
+                'idLine' => $request->input('line'),
+                'keterangan_OK' =>  $request->input('itemDefact'),
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
-
 
 
             ]);
@@ -251,21 +262,40 @@ class UserController extends Controller
         // elseif($request->input('idTypeDefact')){ //jika out total masuk ke table
 
         // }
-        else {
+   
+        elseif($request->input('nameTypeDefact') != 'OUT_TOTAL') {
 
-
+        
             tempDefact::create([
+                    'idItemDefact' => $valid['idItemDefact'],
+                    'idPart' => $valid['idPart'],
+                    'idColor' => $valid['idColor'],
+                    'idShift' => $valid['idShift'],
+                    'idNPKQ1' => $valid['inspector_npk'],
+                    'idLine' => $request->input('line'),
+                    'keterangan_defact' =>  $request->input('nameTypeDefact'),
+                    'created_at' => now()->format('Y-m-d H:i:s'),
+                    'updated_at' => now()->format('Y-m-d H:i:s')
+
+
+                ]);
+
+        }
+
+        else{
+
+
+            outTotal::create([
+                'idItemDefact' => $valid['idItemDefact'],
                 'idPart' => $valid['idPart'],
                 'idColor' => $valid['idColor'],
-                'idTypeDefact' => $request->input('idTypeDefact'),
-                'itemDefact' => $request->input('itemDefact'),
                 'idShift' => $valid['idShift'],
-                'idNPKQ1' => $valid['inspector_npk'],
+                'idNPKQ2' => $valid['inspector_npk'],
+                'idLine' => $request->input('line'),
+                'keterangan_defact' =>  $request->input('nameTypeDefact'),
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
-
-
-
+                
             ]);
         }
 
