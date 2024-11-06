@@ -19,5 +19,6 @@ class fixProses extends Model
         "idLine",
         'created_at',
         'updated_at',
+        'role'
     ];
 }

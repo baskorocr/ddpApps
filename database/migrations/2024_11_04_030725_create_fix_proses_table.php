@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('keterangan_OK');
             $table->string('idNPK');
             $table->unsignedBigInteger('idLine');
+            $table->string('role');
             $table->foreign('idLine')->references('id')->on('lines')->onDelete('cascade')->onUpdate('cascade');
 
 

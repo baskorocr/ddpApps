@@ -11,12 +11,16 @@ class endRepaint extends Model
 
 
     protected $fillable = [
-        'idTempDefact',
+        'idPart',
+        'idColor',
+        'idItemDefact',
         'idShift',
-        'idTypeDefact',
-        'itemDefact',
+        'keterangan_defact',
+        'idNPK',
+        'idLine',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'role'
 
 
 

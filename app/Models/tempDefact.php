@@ -18,11 +18,12 @@ class tempDefact extends Model
         'idShift',
         'keterangan_defact',
         "idLine",
-        'idNPKQ1',
+        'idNPK',
+        'role'
 
     ];
 
-    
+
 
     public function part()
     {
@@ -50,6 +51,11 @@ class tempDefact extends Model
     public function shift()
     {
         return $this->belongsTo(shift::class, 'idShift');
+    }
+
+    public function itemDefact()
+    {
+        return $this->belongsTo(itemDefects::class, 'idItemDefact');
     }
 
 }
