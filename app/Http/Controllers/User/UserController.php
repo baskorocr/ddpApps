@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -190,7 +191,7 @@ class UserController extends Controller
             ->groupBy('item_defects.idTypeDefact', 'type_defects.type')
             ->get();
         $typeDefacts = typeDefect::all();
-        $tempData = tempDefact::get()->first();
+
 
         $idItemDefactsArray = explode(', ', $group[0]->idItemDefacts);
         $idItemDefactsArrayGroup1 = explode(', ', $group[1]->idItemDefacts);
@@ -203,7 +204,7 @@ class UserController extends Controller
             $item->itemDefacts = explode(', ', $item->itemDefacts);
         }
 
-        return view('user.q2', compact('types', 'lines', 'group', 'typeDefacts', 'colors', 'shifts', 'idItemDefactsArray', 'idItemDefactsArrayGroup1', 'idItemDefactsArrayGroup2', 'tempData'));
+        return view('user.q2', compact('types', 'lines', 'group', 'typeDefacts', 'colors', 'shifts', 'idItemDefactsArray', 'idItemDefactsArrayGroup1', 'idItemDefactsArrayGroup2'));
 
     }
 
@@ -231,7 +232,7 @@ class UserController extends Controller
             'idPart' => 'required|integer',
             'idColor' => 'required|string',
             'inspector_npk' => 'required|string',
-            'date' => 'required|date',
+    
             'idShift' => 'required|integer',
 
 
@@ -261,8 +262,7 @@ class UserController extends Controller
         // elseif($request->input('idTypeDefact')){ //jika out total masuk ke table
 
         // }
-        elseif ($request->input('nameTypeDefact') == 'REPAIR') {
-
+        elseif ($request->input('nameTypeDefact') == 'REPAINT') {
 
             endRepaint::create([
                 'idItemDefact' => $request->input('idItemDefact'),
@@ -330,7 +330,13 @@ class UserController extends Controller
         $validator = $request->validate([
 
             'idPart' => 'required|integer',
-            'idProses' => 'required|integer'
+            'idColor' => 'required|integer',
+            'inspector_npk' => 'required|string',
+
+            'idShift' => 'required|integer',
+        
+            'line' => 'required|integer', 
+           
 
 
             // 'line' => 'required|string', // Ensure line is validated
@@ -339,15 +345,21 @@ class UserController extends Controller
 
 
 
-        if ($request->input('idProses') == null) {
-            return "Dasdas";
+      
+
+        $temp = tempDefact::where('idPart', $validator['idPart'])
+        ->where('idColor', $validator['idColor'])
+        ->where('idShift', $validator['idShift'])
+        ->first();
+        
+
+
+        if (is_null($temp)) { // Akan masuk ke kondisi ini jika $temp bernilai null
+            return response()->json(['message' => 'Table Proses Buffing is Null']);
         }
 
-        $temp = tempDefact::findOrFail($request->input('idProses'));
-
-
         if ($request->input('nameTypeDefact') == 'ok') { //jika ok masuk table fix utk rsp
-
+            
             fixProses::create([
                 'idStatusOK' => 2,
                 'idPart' => $temp->idPart,
@@ -369,7 +381,7 @@ class UserController extends Controller
 
         // }
         elseif ($request->input('nameTypeDefact') == 'REPAINT') {
-
+           
 
             endRepaint::create([
                 'idItemDefact' => $temp->idItemDefact,
@@ -389,7 +401,7 @@ class UserController extends Controller
 
         } else {
 
-
+    
             outTotal::create([
                 'idItemDefact' => $request->input('idItemDefact'),
                 'idPart' => $request->input('idPart'),
@@ -412,7 +424,7 @@ class UserController extends Controller
         // Example: Defact::create($request->all());
 
         // Simulate successful response
-        return redirect()->url('/users/q2');
+        return response()->json(['message' => 'Data submitted successfully!']);
 
 
     }
@@ -471,6 +483,93 @@ class UserController extends Controller
         }
 
     }
+
+
+    public function countShift(){
+        $date = '2024-11-06'; // Replace this with your desired date
+        $today = Carbon::today();
+
+        //pershift
+        // $totals = DB::table('shifts')
+        // ->select(
+        //     'shifts.id',
+        //     DB::raw('
+        //         COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok_buffing" THEN fix_proses.id END) as total_ok_buffing
+        //     '),
+        //     DB::raw('
+        //         COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok" THEN fix_proses.id END) as total_ok
+        //     '),
+        //     DB::raw('COUNT(DISTINCT out_totals.id) as total_out_totals'),
+        //     DB::raw('COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_end_repaints')
+        // )
+        // ->leftJoin('fix_proses', function ($join) use ($today) {
+        //     $join->on('fix_proses.idShift', '=', 'shifts.id')
+        //          ->whereDate('fix_proses.created_at', '=', $today);  // Filter by the desired date for fix_proses
+        // })
+        // ->leftJoin('out_totals', function ($join) use ($today) {
+        //     $join->on('out_totals.idShift', '=', 'shifts.id')
+        //          ->whereDate('out_totals.created_at', '=', $today);  // Filter by the desired date for out_totals
+        // })
+        // ->leftJoin('end_repaints', function ($join) use ($today) {
+        //     $join->on('end_repaints.idShift', '=', 'shifts.id')
+        //          ->whereDate('end_repaints.created_at', '=', $today);  // Filter by the desired date for end_repaints
+        // })
+        // ->groupBy('shifts.id')
+        // ->orderBy('shifts.id')
+        // ->get();
+
+        $totals = DB::table('shifts')
+        ->select(
+            DB::raw('
+                COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok_buffing" THEN fix_proses.id END) as total_ok_buffing
+            '),
+            DB::raw('
+                COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok" THEN fix_proses.id END) as total_ok
+            '),
+            DB::raw('COUNT(DISTINCT out_totals.id) as total_out_totals'),
+            DB::raw('COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_end_repaints'),
+            DB::raw('
+                COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok_buffing" THEN fix_proses.id END) +
+                COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok" THEN fix_proses.id END) +
+                COUNT(DISTINCT out_totals.id) +
+                COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_semua
+            ')
+        )
+        ->leftJoin('fix_proses', function ($join) use ($today) {
+            $join->on('fix_proses.idShift', '=', 'shifts.id')
+                 ->whereDate('fix_proses.created_at', '=', $today);  // Filter by the desired date for fix_proses
+        })
+        ->leftJoin('out_totals', function ($join) use ($today) {
+            $join->on('out_totals.idShift', '=', 'shifts.id')
+                 ->whereDate('out_totals.created_at', '=', $today);  // Filter by the desired date for out_totals
+        })
+        ->leftJoin('end_repaints', function ($join) use ($today) {
+            $join->on('end_repaints.idShift', '=', 'shifts.id')
+                 ->whereDate('end_repaints.created_at', '=', $today);  // Filter by the desired date for end_repaints
+        })
+        ->first(); // Get the result as a single row
+    
+    // Return as JSON
+
+    // We use first() to get a single result with all totals combined
+
+    $rsp = ($totals->total_ok/$totals->total_semua)*100;
+    $okBuffing = ($totals->total_ok_buffing/$totals->total_semua)*100;
+    $fsp = $rsp+$okBuffing;
+    $repaint = ($totals->total_end_repaints/$totals->total_semua)*100;
+    $out_total = ($totals->total_out_totals/$totals->total_semua)*100;
+// Return as JSON
+
+dd('rsp= '.$rsp.'%, '.' fsp= '.$fsp.'%, '.' repaint= '.$repaint.'%, '.' out_total= '.$out_total.'%,' . ' totalBarang= '.$totals->total_semua);
+return response()->json($totals);
+
+    
+
+
+
+    }
+
+
 
 
 

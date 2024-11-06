@@ -37,8 +37,6 @@
                     <input id="inspector_name" type="text" value="{{ auth()->user()->name }}"
                         class="form-input w-full mt-2" readonly>
 
-                    <label for="date" class="block font-medium mt-4">Tanggal</label>
-                    <input id="date" type="date" class="form-input w-full mt-2">
 
                     <label for="shift" class="block font-medium mt-4">shift</label>
                     <select id="shift" class="form-select w-full mt-2">

@@ -37,8 +37,7 @@
                     <input id="inspector_name" type="text" value="{{ auth()->user()->name }}"
                         class="form-input w-full mt-2" readonly>
 
-                    <label for="date" class="block font-medium mt-4">Tanggal</label>
-                    <input id="date" type="date" class="form-input w-full mt-2">
+                   
 
                     <label for="shift" class="block font-medium mt-4">shift</label>
                     <select id="shift" class="form-select w-full mt-2">
@@ -47,17 +46,18 @@
                             <option value="{{ $shift->id }}">{{ $shift->shift }}</option>
                         @endforeach
                     </select>
-                </div>
-
-                <!-- Right Column -->
-                <div>
-                    <label for="line" class="block font-medium">Line</label>
+                    <label for="line" class="block font-medium mt-4">Line</label>
                     <select id="line" class="form-select w-full mt-2">
                         <option value="">Select Line</option>
                         @foreach ($lines as $line)
                             <option value="{{ $line->id }}">{{ $line->nameLine }}</option>
                         @endforeach
                     </select>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                   
                     <h2 class="text-lg font-semibold mb-4">Data Summary</h2>
                     <ul class="list-disc list-inside space-y-1">
                         <li>OK: 12 (60%)</li>
@@ -73,38 +73,18 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
                 <!-- Buffing Section -->
                 <div>
-                    <h2 class="text-lg font-semibold mb-4">Fixed Product</h2>
+                    <h2 class="text-lg font-semibold mb-4">Fixed Buffing</h2>
 
                     <form class="defact-form">
                         @csrf
-                        <input type="hidden" name="idStatus" value="1">
+
                         <input type="hidden" name="nameTypeDefact" value="ok">
                         <button
                             class="mb-4 bg-green-500 text-white text-center p-8 text-4xl font-bold rounded mt-4 w-full">
                             OK
                         </button>
                     </form>
-                    <h2 class="text-lg font-semibold mb-4">Buffing</h2>
-                    <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
-
-
-                        @foreach ($group[0]->itemDefacts as $index => $defact)
-                            <form class="defact-form">
-                                @csrf
-                                <input type="hidden" name="idItemDefact" value="{{ $idItemDefactsArray[$index] }}">
-                                <input type="hidden" name="idProses" value="{{ $tempData->id }}">
-
-                                <input type="hidden" name="nameTypeDefact" value="{{ $group[0]->nameType }}">
-                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button type="submit"
-                                    class="bg-blue-500 text-white hover:bg-blue-600 py-5 w-full text-base font-semibold">
-                                    {{ $defact }}
-                                </x-button>
-                            </form>
-                        @endforeach
-
-
-                    </div>
+              
                 </div>
 
                 <!-- Repaint Section -->
@@ -118,7 +98,6 @@
                                 @csrf
                                 <input type="hidden" name="idItemDefact"
                                     value="{{ $idItemDefactsArrayGroup1[$index] }}">
-                                <input type="hidden" name="idProses" value="{{ $tempData->id }}">
                                 <input type="hidden" name="nameTypeDefact" value="{{ $group[1]->nameType }}">
                                 <input type="hidden" name="itemDefact" value="{{ $defact }}">
                                 <x-button type="submit"
@@ -140,7 +119,7 @@
                                 @csrf
                                 <input type="hidden" name="idItemDefact"
                                     value="{{ $idItemDefactsArrayGroup2[$index] }}">
-                                <input type="hidden" name="idProses" value="{{ $tempData->id }}">
+                             
                                 <input type="hidden" name="nameTypeDefact" value="{{ $group[2]->nameType }}">
                                 <input type="hidden" name="itemDefact" value="{{ $defact }}">
                                 <x-button type="submit"
@@ -220,7 +199,7 @@
                     method: 'POST',
                     data: combinedData,
                     success: function(response) {
-                        alert('Data submitted successfully: ' + response.message);
+                        alert('info: ' + response.message);
                         // Optionally, you can reset the form or perform other actions
                     },
                     error: function(xhr) {
