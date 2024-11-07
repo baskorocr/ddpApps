@@ -53,6 +53,7 @@ Route::group(['middleware' => ['role:users'], 'prefix' => 'users'], function () 
 });
 
 Route::get('/count', [UserController::class, 'countShift']);
+Route::get('/countPart', [UserController::class, 'countPart']);
 
 // // useless routes
 // // Just to demo sidebar dropdown links active states.

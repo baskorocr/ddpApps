@@ -45,24 +45,26 @@
                             <option value="{{ $shift->id }}">{{ $shift->shift }}</option>
                         @endforeach
                     </select>
-                </div>
-
-                <!-- Right Column -->
-                <div>
-                    <label for="line" class="block font-medium">Line</label>
+                    <label for="line" class="block font-medium mt-4">Line</label>
                     <select id="line" class="form-select w-full mt-2">
                         <option value="">Select Line</option>
                         @foreach ($lines as $line)
                             <option value="{{ $line->id }}">{{ $line->nameLine }}</option>
                         @endforeach
                     </select>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+
                     <h2 class="text-lg font-semibold mb-4">Data Summary</h2>
                     <ul class="list-disc list-inside space-y-1">
-                        <li>OK: 12 (60%)</li>
-                        <li>Buffing: 50 (20%)</li>
-                        <li>Repaint: 10 (13%)</li>
-                        <li>OT: 2 (2%)</li>
+                        <li id="ok-item">OK: 0 (0%)</li>
+                        <li id="buffing-item">Buffing: 0 (0%)</li>
+                        <li id="repaint-item">Repaint: 0 (0%)</li>
+                        <li id="ot-item">OT: 0 (0%)</li>
                     </ul>
+
                 </div>
             </div>
         </div>
@@ -86,7 +88,7 @@
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
 
 
-                      @foreach ($group[0]->itemDefacts as $index => $defact)
+                        @foreach ($group[0]->itemDefacts as $index => $defact)
                             <form class="defact-form">
                                 @csrf
                                 <input type="hidden" name="idItemDefact" value="{{ $idItemDefactsArray[$index] }}">
@@ -108,21 +110,22 @@
                 <div>
                     <h2 class="text-lg font-semibold mb-4">Repaint</h2>
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
-                        
-                      
-                        @foreach ($group[1]->itemDefacts as $index => $defact)
-                        <form class="defact-form">
-                            @csrf
-                            <input type="hidden" name="idItemDefact" value="{{ $idItemDefactsArrayGroup1[$index] }}">
 
-                            <input type="hidden" name="nameTypeDefact" value="{{ $group[1]->nameType }}">
-                            <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                            <x-button type="submit"
-                                class="bg-yellow-500 text-white hover:bg-yellow-600 py-5 w-full text-base font-semibold">
-                                {{ $defact }}
-                            </x-button>
-                        </form>
-                    @endforeach
+
+                        @foreach ($group[1]->itemDefacts as $index => $defact)
+                            <form class="defact-form">
+                                @csrf
+                                <input type="hidden" name="idItemDefact"
+                                    value="{{ $idItemDefactsArrayGroup1[$index] }}">
+
+                                <input type="hidden" name="nameTypeDefact" value="{{ $group[1]->nameType }}">
+                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
+                                <x-button type="submit"
+                                    class="bg-yellow-500 text-white hover:bg-yellow-600 py-5 w-full text-base font-semibold">
+                                    {{ $defact }}
+                                </x-button>
+                            </form>
+                        @endforeach
                     </div>
                 </div>
 
@@ -132,18 +135,19 @@
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
 
                         @foreach ($group[2]->itemDefacts as $index => $defact)
-                        <form class="defact-form">
-                            @csrf
-                            <input type="hidden" name="idItemDefact" value="{{ $idItemDefactsArrayGroup2[$index] }}">
+                            <form class="defact-form">
+                                @csrf
+                                <input type="hidden" name="idItemDefact"
+                                    value="{{ $idItemDefactsArrayGroup2[$index] }}">
 
-                            <input type="hidden" name="nameTypeDefact" value="{{ $group[2]->nameType }}">
-                            <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                            <x-button type="submit"
-                                class="bg-red-500 text-white hover:bg-red-600 py-5 w-full text-base font-semibold">
-                                {{ $defact }}
-                            </x-button>
-                        </form>
-                    @endforeach
+                                <input type="hidden" name="nameTypeDefact" value="{{ $group[2]->nameType }}">
+                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
+                                <x-button type="submit"
+                                    class="bg-red-500 text-white hover:bg-red-600 py-5 w-full text-base font-semibold">
+                                    {{ $defact }}
+                                </x-button>
+                            </form>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -184,7 +188,7 @@
 
                 // Add additional data
                 const additionalData = {
-              
+
                     idPart: $('#part_name').val(),
                     idColor: $('#color').val(),
                     line: $('#line').val(), // Added line data
@@ -228,6 +232,28 @@
                     }
                 });
             });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            function updateCounts() {
+                fetch("http://127.0.0.1:8000/count")
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("ok-item").textContent = `OK: ${data.totalOk} (${data.rsp}%)`;
+                        document.getElementById("buffing-item").textContent =
+                            `Buffing: ${data.totalOkBuff} (${data.okBuffing}%)`;
+                        document.getElementById("repaint-item").textContent =
+                            `Repaint: ${data.totalRepaint} (${data.repaint}%)`;
+                        document.getElementById("ot-item").textContent =
+                            `OT: ${data.totalOut} (${data.out_total}%)`;
+                    })
+                    .catch(error => console.error("Error fetching count data:", error));
+            }
+
+            // Fetch data initially and set up an interval to refresh periodically
+            updateCounts();
+            setInterval(updateCounts, 5000); // Refresh every 60 seconds
         });
     </script>
 

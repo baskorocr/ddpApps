@@ -11,21 +11,19 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('temp_defacts', function (Blueprint $table) {
-            $table->id();
+              $table->id();
             $table->unsignedBigInteger('idPart');
             $table->unsignedBigInteger('idColor');
-            $table->unsignedBigInteger('idItemDefact');
             $table->unsignedBigInteger('idShift');
-            $table->string("keterangan_defact");
-            $table->string('idNPK');
-            $table->string('role');
             $table->unsignedBigInteger('idLine');
+            $table->string('typeDefact');
+            $table->string('role');
+            $table->string('idNPK');
+
             $table->foreign('idLine')->references('id')->on('lines')->onDelete('cascade')->onUpdate('cascade');
 
-
-
             $table->foreign('idNPK')->references('npk')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('idItemDefact')->references('id')->on('item_defects')->onDelete('cascade')->onUpdate('cascade');
+          
             $table->foreign('idPart')->references('id')->on('parts')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idColor')->references('id')->on('colors')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idShift')->references('id')->on('shifts')->onDelete('cascade')->onUpdate('cascade');

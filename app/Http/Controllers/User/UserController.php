@@ -232,8 +232,9 @@ class UserController extends Controller
             'idPart' => 'required|integer',
             'idColor' => 'required|string',
             'inspector_npk' => 'required|string',
-    
+
             'idShift' => 'required|integer',
+            'nameTypeDefact' => 'required|string',
 
 
             // 'line' => 'required|string', // Ensure line is validated
@@ -241,16 +242,18 @@ class UserController extends Controller
 
 
 
+
         if ($request->input('nameTypeDefact') == 'ok') { //jika ok masuk table fix utk rsp
 
             fixProses::create([
-                'idStatusOK' => 1,
+
                 'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
                 'idShift' => $request->input('idShift'),
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
-                'keterangan_OK' => $request->input('nameTypeDefact'),
+                'typeDefact' => "OK",
+                'keterangan' => 'ok',
                 'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
@@ -264,15 +267,18 @@ class UserController extends Controller
         // }
         elseif ($request->input('nameTypeDefact') == 'REPAINT') {
 
-            endRepaint::create([
-                'idItemDefact' => $request->input('idItemDefact'),
+           
+
+            fixProses::create([
+
                 'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
                 'idShift' => $request->input('idShift'),
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact'),
+                'keterangan' => $request->input('itemDefact'),
                 'role' => 'Q1',
-                'keterangan_defact' => $request->input('nameTypeDefact'),
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
 
@@ -284,14 +290,13 @@ class UserController extends Controller
 
 
             tempDefact::create([
-                'idItemDefact' => $request->input('idItemDefact'),
-                'idPart' => $request->input('idPart'),
+              'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
                 'idShift' => $request->input('idShift'),
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact'),
                 'role' => 'Q1',
-                'keterangan_defact' => $request->input('nameTypeDefact'),
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
 
@@ -301,20 +306,21 @@ class UserController extends Controller
         } else {
 
 
-            outTotal::create([
-                'idItemDefact' => $request->input('idItemDefact'),
+             fixProses::create([
+
                 'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
                 'idShift' => $request->input('idShift'),
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact'),
+                'keterangan' => $request->input('itemDefact'),
                 'role' => 'Q1',
-                'keterangan_defact' => $request->input('nameTypeDefact'),
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
 
-            ]);
 
+            ]);
         }
 
         // Process the data (e.g., save to the database)
@@ -330,13 +336,11 @@ class UserController extends Controller
         $validator = $request->validate([
 
             'idPart' => 'required|integer',
-            'idColor' => 'required|integer',
+            'idColor' => 'required|string',
             'inspector_npk' => 'required|string',
 
             'idShift' => 'required|integer',
-        
-            'line' => 'required|integer', 
-           
+            'nameTypeDefact' => 'required|string',
 
 
             // 'line' => 'required|string', // Ensure line is validated
@@ -345,13 +349,12 @@ class UserController extends Controller
 
 
 
-      
+
 
         $temp = tempDefact::where('idPart', $validator['idPart'])
-        ->where('idColor', $validator['idColor'])
-        ->where('idShift', $validator['idShift'])
-        ->first();
-        
+            ->where('idColor', $validator['idColor'])
+            ->first();
+
 
 
         if (is_null($temp)) { // Akan masuk ke kondisi ini jika $temp bernilai null
@@ -359,16 +362,17 @@ class UserController extends Controller
         }
 
         if ($request->input('nameTypeDefact') == 'ok') { //jika ok masuk table fix utk rsp
-            
-            fixProses::create([
-                'idStatusOK' => 2,
-                'idPart' => $temp->idPart,
-                'role' => 'Q2',
-                'idColor' => $temp->idColor,
-                'idShift' => $temp->idShift,
+
+         fixProses::create([
+
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
-                'keterangan_OK' => 'ok_buffing',
+                'typeDefact' => "OK_BUFFING",
+                'keterangan' => 'ok_buffing',
+                'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
 
@@ -381,36 +385,39 @@ class UserController extends Controller
 
         // }
         elseif ($request->input('nameTypeDefact') == 'REPAINT') {
-           
 
-            endRepaint::create([
-                'idItemDefact' => $temp->idItemDefact,
-                'idPart' => $temp->idPart,
-                'idColor' => $temp->idColor,
-                'idShift' => $temp->idShift,
-                'role' => 'Q2',
+
+            fixProses::create([
+            
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
-                'keterangan_defact' => $request->input('nameTypeDefact'),
+                'typeDefact' => $request->input('nameTypeDefact'),
+                'keterangan' => $request->input('itemDefact'),
+                'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
 
 
             ]);
+
             $temp->delete();
 
         } else {
 
-    
-            outTotal::create([
-                'idItemDefact' => $request->input('idItemDefact'),
+
+            fixProses::create([
+
                 'idPart' => $request->input('idPart'),
-                'role' => 'Q2',
                 'idColor' => $request->input('idColor'),
                 'idShift' => $request->input('idShift'),
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
-                'keterangan_defact' => $request->input('nameTypeDefact'),
+                'typeDefact' => $request->input('nameTypeDefact'),
+                'keterangan' => $request->input('itemDefact'),
+                'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
 
@@ -485,7 +492,8 @@ class UserController extends Controller
     }
 
 
-    public function countShift(){
+    public function countShift()
+    {
         $date = '2024-11-06'; // Replace this with your desired date
         $today = Carbon::today();
 
@@ -519,55 +527,145 @@ class UserController extends Controller
         // ->get();
 
         $totals = DB::table('shifts')
-        ->select(
-            DB::raw('
+            ->select(
+                DB::raw('
                 COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok_buffing" THEN fix_proses.id END) as total_ok_buffing
             '),
-            DB::raw('
+                DB::raw('
                 COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok" THEN fix_proses.id END) as total_ok
             '),
-            DB::raw('COUNT(DISTINCT out_totals.id) as total_out_totals'),
-            DB::raw('COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_end_repaints'),
-            DB::raw('
+                DB::raw('COUNT(DISTINCT out_totals.id) as total_out_totals'),
+                DB::raw('COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_end_repaints'),
+                DB::raw('
                 COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok_buffing" THEN fix_proses.id END) +
                 COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok" THEN fix_proses.id END) +
                 COUNT(DISTINCT out_totals.id) +
                 COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_semua
             ')
-        )
-        ->leftJoin('fix_proses', function ($join) use ($today) {
-            $join->on('fix_proses.idShift', '=', 'shifts.id')
-                 ->whereDate('fix_proses.created_at', '=', $today);  // Filter by the desired date for fix_proses
-        })
-        ->leftJoin('out_totals', function ($join) use ($today) {
-            $join->on('out_totals.idShift', '=', 'shifts.id')
-                 ->whereDate('out_totals.created_at', '=', $today);  // Filter by the desired date for out_totals
-        })
-        ->leftJoin('end_repaints', function ($join) use ($today) {
-            $join->on('end_repaints.idShift', '=', 'shifts.id')
-                 ->whereDate('end_repaints.created_at', '=', $today);  // Filter by the desired date for end_repaints
-        })
-        ->first(); // Get the result as a single row
-    
-    // Return as JSON
+            )
+            ->leftJoin('fix_proses', function ($join) use ($today) {
+                $join->on('fix_proses.idShift', '=', 'shifts.id')
+                    ->whereDate('fix_proses.created_at', '=', $today);  // Filter by the desired date for fix_proses
+            })
+            ->leftJoin('out_totals', function ($join) use ($today) {
+                $join->on('out_totals.idShift', '=', 'shifts.id')
+                    ->whereDate('out_totals.created_at', '=', $today);  // Filter by the desired date for out_totals
+            })
+            ->leftJoin('end_repaints', function ($join) use ($today) {
+                $join->on('end_repaints.idShift', '=', 'shifts.id')
+                    ->whereDate('end_repaints.created_at', '=', $today);  // Filter by the desired date for end_repaints
+            })
+            ->first(); // Get the result as a single row
 
-    // We use first() to get a single result with all totals combined
+        // Return as JSON
 
-    $rsp = ($totals->total_ok/$totals->total_semua)*100;
-    $okBuffing = ($totals->total_ok_buffing/$totals->total_semua)*100;
-    $fsp = $rsp+$okBuffing;
-    $repaint = ($totals->total_end_repaints/$totals->total_semua)*100;
-    $out_total = ($totals->total_out_totals/$totals->total_semua)*100;
-// Return as JSON
+        // We use first() to get a single result with all totals combined
 
-dd('rsp= '.$rsp.'%, '.' fsp= '.$fsp.'%, '.' repaint= '.$repaint.'%, '.' out_total= '.$out_total.'%,' . ' totalBarang= '.$totals->total_semua);
-return response()->json($totals);
+        $rsp = intval(($totals->total_ok / $totals->total_semua) * 100);
+        $okBuffing = intval(($totals->total_ok_buffing / $totals->total_semua) * 100);
+        $fsp = intval($rsp + $okBuffing);
+        $repaint = intval(($totals->total_end_repaints / $totals->total_semua) * 100);
+        $out_total = intval(($totals->total_out_totals / $totals->total_semua) * 100);
+        $totalOk = $totals->total_ok;
+        $totalOkBuff = $totals->total_ok_buffing;
+        $totalRepaint = $totals->total_end_repaints;
+        $totalOut = $totals->total_out_totals;
 
-    
+
+        return response()->json([
+            'rsp' => $rsp,
+            'okBuffing' => $okBuffing,
+            'fsp' => $fsp,
+            'repaint' => $repaint,
+            'out_total' => $out_total,
+            'totalOk' => $totalOk,
+            'totalOkBuff' => $totalOkBuff,
+            'totalRepaint' => $totalRepaint,
+            'totalOut' => $totalOut,
+        ]);
+
+
 
 
 
     }
+
+
+    public function countPart()
+    {
+      
+
+
+
+
+
+
+$result = DB::table('fix_proses as fp')
+    ->join('parts as p', 'fp.idPart', '=', 'p.id')
+    ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
+    ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
+    ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
+    ->select(
+        'c.name as Customer_Name',
+        'tp.type as Part_Type',
+        'cl.color as Color',
+        'p.item as Item',
+        DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
+        DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
+        DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
+        DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
+        DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
+                 COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
+                 COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
+                 COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
+        DB::raw('
+            (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
+            (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END)) ) * 100 as rsp'),
+        DB::raw('
+            ((COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
+            (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END)) ) * 100) + 
+            ((COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) / 
+            (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
+             COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END)) ) * 100) as fsp')
+    )
+    ->whereDate('fp.created_at', '=', \Carbon\Carbon::today()->toDateString()) // Filter by today's date
+    ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
+    ->orderByDesc('fp.created_at')  // Order by the most recent creation date
+    ->orderBy('c.name')              // Secondary sort by customer name
+    ->orderBy('tp.type')             // Tertiary sort by part type
+    ->orderBy('cl.color')            // Quaternary sort by color
+    ->orderBy('p.item')              // Final sort by part item
+    ->get();
+
+
+
+
+return response()->json($result);
+
+
+    }
+        
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
 

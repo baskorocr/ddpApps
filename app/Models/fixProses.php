@@ -9,16 +9,19 @@ class fixProses extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'idPart',
+  protected $fillable = [
+      'idPart',
         'idColor',
-        'idStatusOK',
+        'typeDefact',
+        'idLine',
         'idShift',
         'idNPK',
-        'keterangan_OK',
-        "idLine",
+        'role',
+        'keterangan',
         'created_at',
         'updated_at',
-        'role'
-    ];
+];
+
+
+ 
 }

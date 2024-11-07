@@ -14,19 +14,17 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('idPart');
             $table->unsignedBigInteger('idColor');
-            $table->unsignedBigInteger('idStatusOK');
             $table->unsignedBigInteger('idShift');
-            $table->string('keterangan_OK');
-            $table->string('idNPK');
             $table->unsignedBigInteger('idLine');
+            $table->string('typeDefact');
+            $table->string('keterangan');
             $table->string('role');
+            $table->string('idNPK');
+
             $table->foreign('idLine')->references('id')->on('lines')->onDelete('cascade')->onUpdate('cascade');
 
-
-
-
             $table->foreign('idNPK')->references('npk')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('idStatusOK')->references('id')->on('status_oks')->onDelete('cascade')->onUpdate('cascade');
+          
             $table->foreign('idPart')->references('id')->on('parts')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idColor')->references('id')->on('colors')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idShift')->references('id')->on('shifts')->onDelete('cascade')->onUpdate('cascade');
