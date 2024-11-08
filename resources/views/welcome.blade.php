@@ -11,26 +11,34 @@
                 <!-- Header Section with Logo, Text, and Date/Time -->
                 <div class="flex justify-between mb-4">
                     <!-- Column 1: Logo -->
-                    <div class="flex items-center">
-                        <x-application-logo class="w-10 h-10" />
+                    <div class="flex items-center text-center">
+
+                        <img src="{{ asset('logo.png') }}" class="w-30 h-20" alt="Deskripsi Gambar">
                     </div>
 
                     <!-- Column 2: Text (Dharma Poliplash) -->
-                    <div class="flex items-center">
-                        <span class="text-xl font-semibold">Dharma Poliplash</span>
+                    <div class="flex flex-col items-center text-center">
+                        <span class="text-3xl font-semibold">PT Dharma Poliplast</span>
+                        <span class="text-sm font-semibold mt-3">RTMP (Real Time Monitoring Project)</span>
                     </div>
 
                     <!-- Column 3: Date/Time -->
                     <div class="text-center md:text-right">
-                        <span id="current-date-time" class="text-sm font-medium">
-                            {{ \Carbon\Carbon::now()->format('Y-m-d H:i:s') }}
-                        </span>
+                        <!-- Tanggal -->
+                        <div id="current-date" class="text-center text-xl font-medium">
+                            {{ \Carbon\Carbon::now()->format('Y-m-d') }}
+                        </div>
+                        <!-- Waktu -->
+                        <div id="current-time" class="text-center text-xl font-medium">
+                            {{ \Carbon\Carbon::now()->format('H:i:s') }}
+                        </div>
                     </div>
+
                 </div>
 
                 <!-- Table Section -->
                 <div>
-                    <h2 class="text-lg font-semibold mb-4">Part Data Summary</h2>
+
 
                     <!-- Table Container with horizontal scroll for responsiveness -->
                     <div class="overflow-x-auto">
@@ -66,20 +74,42 @@
         document.addEventListener("DOMContentLoaded", () => {
             let previousData = [];
 
-            function updateDateTime() {
-                const dateTimeElement = document.getElementById('current-date-time');
-                const currentDateTime = new Date();
-                const year = currentDateTime.getFullYear();
-                const month = ('0' + (currentDateTime.getMonth() + 1)).slice(-2);
-                const day = ('0' + currentDateTime.getDate()).slice(-2);
-                const hours = ('0' + currentDateTime.getHours()).slice(-2);
-                const minutes = ('0' + currentDateTime.getMinutes()).slice(-2);
-                const seconds = ('0' + currentDateTime.getSeconds()).slice(-2);
-                const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                dateTimeElement.textContent = formattedDateTime;
+            function updateTime() {
+                const timeElement = document.getElementById("current-time");
+                const now = new Date();
+
+                // Format waktu sebagai HH:MM:SS
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+
+                timeElement.textContent = `${hours}:${minutes}:${seconds}`;
             }
 
-            setInterval(updateDateTime, 1000);
+            // Fungsi untuk memperbarui tanggal setiap hari (atau setiap 10 menit)
+            function updateDate() {
+                const dateElement = document.getElementById("current-date");
+                const now = new Date();
+
+                // Format tanggal sebagai YYYY-MM-DD
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+                const day = String(now.getDate()).padStart(2, '0');
+
+                dateElement.textContent = `${year}-${month}-${day}`;
+            }
+
+            // Memperbarui waktu setiap detik
+            setInterval(updateTime, 1000);
+
+            // Memperbarui tanggal setiap 10 menit
+            setInterval(updateDate, 600000);
+
+            // Memperbarui tanggal dan waktu saat halaman dimuat
+            document.addEventListener("DOMContentLoaded", () => {
+                updateTime();
+                updateDate();
+            });
 
             function updateTable(data) {
                 const tableBody = document.querySelector('#part-data-table tbody');
@@ -138,20 +168,20 @@
             function createRow(item, totalAll, rsp, fsp, repaintPercentage, outTotalPercentage) {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td class="border-b px-4 py-2">${item.Customer_Name}</td>
-                    <td class="border-b px-4 py-2">${item.Item}</td>
-                    <td class="border-b px-4 py-2">${item.Part_Type}</td>
-                    <td class="border-b px-4 py-2">${item.Color}</td>
-                    <td class="border-b px-4 py-2">${totalAll}</td>
-                    <td class="border-b px-4 py-2">${item.Total_OK_Count}</td>
-                    <td class="border-b px-4 py-2">${item.Total_OK_Buffing_Count}</td>
-                    <td class="border-b px-4 py-2">${item.Total_Count_Repaint}</td>
-                    <td class="border-b px-4 py-2">${item.Total_Count_OutTotal}</td>
-                    <td class="border-b px-4 py-2">${rsp.toFixed(2)}%</td>
-                    <td class="border-b px-4 py-2">${fsp.toFixed(2)}%</td>
-                    <td class="border-b px-4 py-2">${repaintPercentage.toFixed(2)}%</td>
-                    <td class="border-b px-4 py-2">${outTotalPercentage.toFixed(2)}%</td>
-                `;
+                   <td class="border-b px-4 py-2 text-center">${item.Customer_Name}</td>
+                    <td class="border-b px-4 py-2 text-center">${item.Item}</td>
+                    <td class="border-b px-4 py-2 text-center">${item.Part_Type}</td>
+                    <td class="border-b px-4 py-2 text-center">${item.Color}</td>
+                    <td class="border-b px-4 py-2 text-center">${totalAll}</td>
+                    <td class="border-b px-4 py-2 text-center">${item.Total_OK_Count}</td>
+                    <td class="border-b px-4 py-2 text-center">${item.Total_OK_Buffing_Count}</td>
+                    <td class="border-b px-4 py-2 text-center">${item.Total_Count_Repaint}</td>
+                    <td class="border-b px-4 py-2 text-center">${item.Total_Count_OutTotal}</td>
+                    <td class="border-b px-4 py-2 text-center">${rsp.toFixed(2)}%</td>
+                    <td class="border-b px-4 py-2 text-center">${fsp.toFixed(2)}%</td>
+                    <td class="border-b px-4 py-2 text-center">${repaintPercentage.toFixed(2)}%</td>
+                    <td class="border-b px-4 py-2 text-center">${outTotalPercentage.toFixed(2)}%</td>
+                            `;
                 return row;
             }
 

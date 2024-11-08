@@ -6,6 +6,8 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Supervisor\SupervisorController;
+use App\Http\Controllers\ColorController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,7 @@ Route::middleware('auth')->group(function () {
 
 Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin'], function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::resource('colors', ColorController::class);
 });
 Route::group(['middleware' => ['role:supervisor'], 'prefix' => 'supervisor'], function () {
     Route::get('/dashboard', [SupervisorController::class, 'index'])->name('supervisor.dashboard');

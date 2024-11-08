@@ -14,8 +14,17 @@ class Controller extends BaseController
     public function index()
     {
         
+        if( auth()->check() && auth()->user()->role == 'users'){
+            return redirect('users/dashboard');
+        }
+         if( auth()->check() && auth()->user()->role != 'users'){
+            return redirect(auth()->user()->role . '/dashboard');
+        }
+        else{
+            return view('welcome');
+        }
 
-        return view('welcome');
+       
 
     }
 }

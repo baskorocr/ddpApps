@@ -267,7 +267,7 @@ class UserController extends Controller
         // }
         elseif ($request->input('nameTypeDefact') == 'REPAINT') {
 
-           
+
 
             fixProses::create([
 
@@ -290,7 +290,7 @@ class UserController extends Controller
 
 
             tempDefact::create([
-              'idPart' => $request->input('idPart'),
+                'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
                 'idShift' => $request->input('idShift'),
                 'idNPK' => $request->input('inspector_npk'),
@@ -306,7 +306,7 @@ class UserController extends Controller
         } else {
 
 
-             fixProses::create([
+            fixProses::create([
 
                 'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
@@ -363,7 +363,7 @@ class UserController extends Controller
 
         if ($request->input('nameTypeDefact') == 'ok') { //jika ok masuk table fix utk rsp
 
-         fixProses::create([
+            fixProses::create([
 
                 'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
@@ -388,7 +388,7 @@ class UserController extends Controller
 
 
             fixProses::create([
-            
+
                 'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
                 'idShift' => $request->input('idShift'),
@@ -494,98 +494,43 @@ class UserController extends Controller
 
     public function countShift()
     {
-        $date = '2024-11-06'; // Replace this with your desired date
-        $today = Carbon::today();
-
-        //pershift
-        // $totals = DB::table('shifts')
-        // ->select(
-        //     'shifts.id',
-        //     DB::raw('
-        //         COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok_buffing" THEN fix_proses.id END) as total_ok_buffing
-        //     '),
-        //     DB::raw('
-        //         COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok" THEN fix_proses.id END) as total_ok
-        //     '),
-        //     DB::raw('COUNT(DISTINCT out_totals.id) as total_out_totals'),
-        //     DB::raw('COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_end_repaints')
-        // )
-        // ->leftJoin('fix_proses', function ($join) use ($today) {
-        //     $join->on('fix_proses.idShift', '=', 'shifts.id')
-        //          ->whereDate('fix_proses.created_at', '=', $today);  // Filter by the desired date for fix_proses
-        // })
-        // ->leftJoin('out_totals', function ($join) use ($today) {
-        //     $join->on('out_totals.idShift', '=', 'shifts.id')
-        //          ->whereDate('out_totals.created_at', '=', $today);  // Filter by the desired date for out_totals
-        // })
-        // ->leftJoin('end_repaints', function ($join) use ($today) {
-        //     $join->on('end_repaints.idShift', '=', 'shifts.id')
-        //          ->whereDate('end_repaints.created_at', '=', $today);  // Filter by the desired date for end_repaints
-        // })
-        // ->groupBy('shifts.id')
-        // ->orderBy('shifts.id')
-        // ->get();
-
-        $totals = DB::table('shifts')
-            ->select(
-                DB::raw('
-                COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok_buffing" THEN fix_proses.id END) as total_ok_buffing
-            '),
-                DB::raw('
-                COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok" THEN fix_proses.id END) as total_ok
-            '),
-                DB::raw('COUNT(DISTINCT out_totals.id) as total_out_totals'),
-                DB::raw('COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_end_repaints'),
-                DB::raw('
-                COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok_buffing" THEN fix_proses.id END) +
-                COUNT(DISTINCT CASE WHEN fix_proses.keterangan_OK = "ok" THEN fix_proses.id END) +
-                COUNT(DISTINCT out_totals.id) +
-                COUNT(DISTINCT CASE WHEN end_repaints.keterangan_defact = "REPAINT" THEN end_repaints.id END) as total_semua
-            ')
-            )
-            ->leftJoin('fix_proses', function ($join) use ($today) {
-                $join->on('fix_proses.idShift', '=', 'shifts.id')
-                    ->whereDate('fix_proses.created_at', '=', $today);  // Filter by the desired date for fix_proses
-            })
-            ->leftJoin('out_totals', function ($join) use ($today) {
-                $join->on('out_totals.idShift', '=', 'shifts.id')
-                    ->whereDate('out_totals.created_at', '=', $today);  // Filter by the desired date for out_totals
-            })
-            ->leftJoin('end_repaints', function ($join) use ($today) {
-                $join->on('end_repaints.idShift', '=', 'shifts.id')
-                    ->whereDate('end_repaints.created_at', '=', $today);  // Filter by the desired date for end_repaints
-            })
-            ->first(); // Get the result as a single row
-
-        // Return as JSON
-
-        // We use first() to get a single result with all totals combined
-
-        $rsp = intval(($totals->total_ok / $totals->total_semua) * 100);
-        $okBuffing = intval(($totals->total_ok_buffing / $totals->total_semua) * 100);
-        $fsp = intval($rsp + $okBuffing);
-        $repaint = intval(($totals->total_end_repaints / $totals->total_semua) * 100);
-        $out_total = intval(($totals->total_out_totals / $totals->total_semua) * 100);
-        $totalOk = $totals->total_ok;
-        $totalOkBuff = $totals->total_ok_buffing;
-        $totalRepaint = $totals->total_end_repaints;
-        $totalOut = $totals->total_out_totals;
-
-
-        return response()->json([
-            'rsp' => $rsp,
-            'okBuffing' => $okBuffing,
-            'fsp' => $fsp,
-            'repaint' => $repaint,
-            'out_total' => $out_total,
-            'totalOk' => $totalOk,
-            'totalOkBuff' => $totalOkBuff,
-            'totalRepaint' => $totalRepaint,
-            'totalOut' => $totalOut,
-        ]);
 
 
 
+        $data = DB::table('fix_proses') // Ganti 'nama_tabel' dengan nama tabel yang sesuai
+            ->select('typeDefact', DB::raw('count(*) as total'))
+            ->whereIn('typeDefact', ['OK', 'REPAINT', 'OUT_TOTAL', 'OK_BUFFING'])
+            ->groupBy('typeDefact')
+            ->pluck('total', 'typeDefact'); // Menggunakan pluck untuk mendapatkan pasangan key-value
+
+        // Ambil data dari pluck atau berikan nilai default 0 jika tidak ada
+        $totalTypeOK = $data['OK'] ?? 0;
+        $totalTypeRepaint = $data['REPAINT'] ?? 0;
+        $totalTypeOutTotal = $data['OUT_TOTAL'] ?? 0;
+        $totalTypeOkBuffing = $data['OK_BUFFING'] ?? 0;
+        $totalData = $totalTypeOK + $totalTypeRepaint + $totalTypeOutTotal + $totalTypeOkBuffing;
+
+        //presentase
+        $rsp = ($totalTypeOK / $totalData) * 100;
+        $fsp = ($rsp + (($totalTypeOkBuffing / $totalData) * 100));
+        $percentTypeOutTotal = ($totalTypeOutTotal / $totalData) * 100;
+        $percentTypaRepaint = ($totalTypeRepaint / $totalData) * 100;
+
+        // Gabungkan data dalam format array
+        $response = [
+            'totalTypeOK' => $totalTypeOK,
+            'totalTypeRepaint' => $totalTypeRepaint,
+            'totalTypeOutTotal' => $totalTypeOutTotal,
+            'totalTypeOkBuffing' => $totalTypeOkBuffing,
+            'rsp' => number_format($rsp, 2),
+            'fsp' => number_format($fsp, 2),
+            'percentTypeOutTotal' => number_format($percentTypeOutTotal, 2),
+            'percentRepaint' => number_format($percentTypaRepaint, 2),
+
+        ];
+
+        // Konversi array ke JSON
+        echo json_encode($response);
 
 
     }
@@ -593,38 +538,38 @@ class UserController extends Controller
 
     public function countPart()
     {
-      
 
 
 
 
 
 
-$result = DB::table('fix_proses as fp')
-    ->join('parts as p', 'fp.idPart', '=', 'p.id')
-    ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-    ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-    ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-    ->select(
-        'c.name as Customer_Name',
-        'tp.type as Part_Type',
-        'cl.color as Color',
-        'p.item as Item',
-        DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-        DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-        DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-        DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-        DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
+
+        $result = DB::table('fix_proses as fp')
+            ->join('parts as p', 'fp.idPart', '=', 'p.id')
+            ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
+            ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
+            ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
+            ->select(
+                'c.name as Customer_Name',
+                'tp.type as Part_Type',
+                'cl.color as Color',
+                'p.item as Item',
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
                  COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
                  COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
                  COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
-        DB::raw('
+                DB::raw('
             (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
             (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
              COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
              COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
              COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END)) ) * 100 as rsp'),
-        DB::raw('
+                DB::raw('
             ((COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
             (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
              COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
@@ -635,40 +580,23 @@ $result = DB::table('fix_proses as fp')
              COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
              COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
              COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END)) ) * 100) as fsp')
-    )
-    ->whereDate('fp.created_at', '=', \Carbon\Carbon::today()->toDateString()) // Filter by today's date
-    ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
-    ->orderByDesc('fp.created_at')  // Order by the most recent creation date
-    ->orderBy('c.name')              // Secondary sort by customer name
-    ->orderBy('tp.type')             // Tertiary sort by part type
-    ->orderBy('cl.color')            // Quaternary sort by color
-    ->orderBy('p.item')              // Final sort by part item
-    ->get();
+            )
+            ->whereDate('fp.created_at', '=', \Carbon\Carbon::today()->toDateString()) // Filter by today's date
+            ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
+            ->orderByDesc('fp.created_at')  // Order by the most recent creation date
+            ->orderBy('c.name')              // Secondary sort by customer name
+            ->orderBy('tp.type')             // Tertiary sort by part type
+            ->orderBy('cl.color')            // Quaternary sort by color
+            ->orderBy('p.item')              // Final sort by part item
+            ->get();
 
 
 
 
-return response()->json($result);
+        return response()->json($result);
 
 
     }
-        
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
 
 
 }

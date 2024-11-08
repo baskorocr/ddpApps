@@ -65,6 +65,7 @@
                         <li id="ot-item">OT: 0 (0%)</li>
                     </ul>
 
+
                 </div>
             </div>
         </div>
@@ -240,23 +241,23 @@
                 fetch("http://127.0.0.1:8000/count")
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById("ok-item").textContent = `OK: ${data.totalOk} (${data.rsp}%)`;
+                        document.getElementById("ok-item").textContent =
+                            `OK: ${data.totalTypeOK} (${data.rsp}%)`;
                         document.getElementById("buffing-item").textContent =
-                            `Buffing: ${data.totalOkBuff} (${data.okBuffing}%)`;
+                            `Buffing: ${data.totalTypeOkBuffing} (${data.fsp}%)`;
                         document.getElementById("repaint-item").textContent =
-                            `Repaint: ${data.totalRepaint} (${data.repaint}%)`;
+                            `Repaint: ${data.totalTypeRepaint} (${data.percentRepaint}%)`;
                         document.getElementById("ot-item").textContent =
-                            `OT: ${data.totalOut} (${data.out_total}%)`;
+                            `OT: ${data.totalTypeOutTotal} (${data.percentTypeOutTotal}%)`;
                     })
                     .catch(error => console.error("Error fetching count data:", error));
             }
 
             // Fetch data initially and set up an interval to refresh periodically
             updateCounts();
-            setInterval(updateCounts, 5000); // Refresh every 60 seconds
+            setInterval(updateCounts, 5000); // Refresh every 5 seconds
         });
     </script>
-
 
 
 

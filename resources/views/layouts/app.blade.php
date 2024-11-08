@@ -19,7 +19,6 @@
             display: none;
         }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -28,8 +27,7 @@
 <body class="font-sans antialiased">
     <div x-data="mainState" :class="{ dark: isDarkMode }" x-on:resize.window="handleWindowResize" x-cloak>
         <div class="min-h-screen text-gray-900 bg-gray-100 dark:bg-dark-eval-0 dark:text-gray-200">
-
-            <!-- Conditionally Render Sidebar -->
+            <!-- Sidebar -->
             @if (Auth::user() && Auth::user()->role != 'users')
                 <x-sidebar.sidebar />
             @endif
@@ -37,8 +35,8 @@
             <!-- Page Wrapper -->
             <div class="flex flex-col min-h-screen"
                 :class="{
-                    'lg:ml-64': Auth::user() && Auth::user() - > role != 'users' && isSidebarOpen,
-                    'md:ml-16': Auth::user() && Auth::user() - > role != 'users' && !isSidebarOpen
+                    'lg:ml-64': isSidebarOpen,
+                    'md:ml-16': !isSidebarOpen
                 }"
                 style="transition-property: margin; transition-duration: 150ms;">
 
@@ -47,7 +45,7 @@
 
                 <!-- Page Heading -->
                 <header>
-                    <div class="p-1 sm:p-2">
+                    <div class="p-4 sm:p-6">
                         {{ $header }}
                     </div>
                 </header>

@@ -37,7 +37,7 @@
                     <input id="inspector_name" type="text" value="{{ auth()->user()->name }}"
                         class="form-input w-full mt-2" readonly>
 
-                   
+
 
                     <label for="shift" class="block font-medium mt-4">shift</label>
                     <select id="shift" class="form-select w-full mt-2">
@@ -57,13 +57,13 @@
 
                 <!-- Right Column -->
                 <div>
-                   
+
                     <h2 class="text-lg font-semibold mb-4">Data Summary</h2>
                     <ul class="list-disc list-inside space-y-1">
-                        <li>OK: 12 (60%)</li>
-                        <li>Buffing: 50 (20%)</li>
-                        <li>Repaint: 10 (13%)</li>
-                        <li>OT: 2 (2%)</li>
+                        <li id="ok-item">OK: 0 (0%)</li>
+                        <li id="buffing-item">Buffing: 0 (0%)</li>
+                        <li id="repaint-item">Repaint: 0 (0%)</li>
+                        <li id="ot-item">OT: 0 (0%)</li>
                     </ul>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                             OK
                         </button>
                     </form>
-              
+
                 </div>
 
                 <!-- Repaint Section -->
@@ -119,7 +119,7 @@
                                 @csrf
                                 <input type="hidden" name="idItemDefact"
                                     value="{{ $idItemDefactsArrayGroup2[$index] }}">
-                             
+
                                 <input type="hidden" name="nameTypeDefact" value="{{ $group[2]->nameType }}">
                                 <input type="hidden" name="itemDefact" value="{{ $defact }}">
                                 <x-button type="submit"
@@ -212,6 +212,29 @@
                     }
                 });
             });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            function updateCounts() {
+                fetch("http://127.0.0.1:8000/count")
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("ok-item").textContent =
+                            `OK: ${data.totalTypeOK} (${data.rsp}%)`;
+                        document.getElementById("buffing-item").textContent =
+                            `Buffing: ${data.totalTypeOkBuffing} (${data.fsp}%)`;
+                        document.getElementById("repaint-item").textContent =
+                            `Repaint: ${data.totalTypeRepaint} (${data.percentRepaint}%)`;
+                        document.getElementById("ot-item").textContent =
+                            `OT: ${data.totalTypeOutTotal} (${data.percentTypeOutTotal}%)`;
+                    })
+                    .catch(error => console.error("Error fetching count data:", error));
+            }
+
+            // Fetch data initially and set up an interval to refresh periodically
+            updateCounts();
+            setInterval(updateCounts, 5000); // Refresh every 5 seconds
         });
     </script>
 
