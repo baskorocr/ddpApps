@@ -15,4 +15,9 @@ class typeParts extends Model
         'type',
         'idCustomer'
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(customer::class, 'idCustomer');
+    }
 }

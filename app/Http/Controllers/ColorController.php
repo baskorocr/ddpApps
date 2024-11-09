@@ -2,58 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Colors;
+use Illuminate\Http\Request;
 
 class ColorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $colors = Colors::all();
+        $colors = Colors::all();  // Mendapatkan semua warna dari database
         return view('colors.index', compact('colors'));
     }
 
-    public function create()
-    {
-        return view('colors.create');
-    }
-
+    // Menyimpan warna baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'color' => 'required|string|max:255',
         ]);
 
-        Colors::create($request->all());
-        return redirect()->route('colors.index');
-    }
+        // Store the color
+        Colors::create($validated);
 
-    public function show(Colors $color)
-    {
-        return view('colors.show', compact('color'));
+        return response()->json(['success' => true, 'message' => 'Color added successfully']);
     }
-
-    public function edit(Colors $color)
+    // Mengupdate data warna
+    public function update(Request $request, $id)
     {
-        return view('colors.edit', compact('color'));
-    }
 
-    public function update(Request $request, Colors $color)
-    {
-        $request->validate([
+        $validated = $request->validate([
             'color' => 'required|string|max:255',
         ]);
 
-        $color->update($request->all());
-        return redirect()->route('colors.index');
+        // Update the color
+        $color = Colors::findOrFail($id);
+        $color->update($validated);
+
+        return response()->json(['success' => true, 'message' => 'Color updated successfully']);
     }
 
-    public function destroy(Colors $color)
+    // Menghapus warna
+    public function destroy($id)
     {
+        $color = Colors::findOrFail($id);
         $color->delete();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Color deleted successfully!',
+            ]);
+        }
+
         return redirect()->route('colors.index');
     }
 }
