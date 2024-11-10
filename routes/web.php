@@ -10,7 +10,10 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TypePartController;
 use App\Http\Controllers\TypeDefectController;
-
+use App\Http\Controllers\ItemDefactController;
+use App\Http\Controllers\LineController;
+use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\PartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +45,10 @@ Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin'], function () 
     Route::resource('customers', CustomerController::class);
     Route::resource('type_defects', TypeDefectController::class);
     Route::resource('type_parts', TypePartController::class);
+    Route::resource('shifts', ShiftController::class);
+    Route::resource('lines', LineController::class);
+    Route::resource('parts', PartController::class);
+    Route::resource('item_defacts', ItemDefactController::class);
 
 
 });

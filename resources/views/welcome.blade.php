@@ -1,18 +1,18 @@
-<x-app-layout>
+<x-guest-layout>
     <x-slot name="header">
         <!-- Empty header slot for customization if needed -->
     </x-slot>
 
+
     <!-- Main Content -->
-    <div class="p-4 md:p-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
-        <div class="p-4 md:p-6 bg-white rounded-md shadow-md dark:bg-dark-eval-1">
-            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 md:gap-8">
+    <div class="min-h-screen p-4 md:p-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
+        <div class="mt-20 p-4 md:p-6 bg-white rounded-md shadow-md dark:bg-dark-eval-1 h-full">
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-1 gap-4 md:gap-8 h-full">
 
                 <!-- Header Section with Logo, Text, and Date/Time -->
                 <div class="flex justify-between mb-4">
                     <!-- Column 1: Logo -->
                     <div class="flex items-center text-center">
-
                         <img src="{{ asset('logo.png') }}" class="w-30 h-20" alt="Deskripsi Gambar">
                     </div>
 
@@ -33,16 +33,13 @@
                             {{ \Carbon\Carbon::now()->format('H:i:s') }}
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Table Section -->
-                <div>
-
-
+                <div class="h-full">
                     <!-- Table Container with horizontal scroll for responsiveness -->
-                    <div class="overflow-x-auto">
-                        <table id="part-data-table" class="min-w-full table-auto border-collapse">
+                    <div class="overflow-x-auto h-full">
+                        <table id="part-data-table" class="min-w-full table-auto border-collapse h-full">
                             <thead>
                                 <tr>
                                     <th class="border-b px-4 py-2">Customer</th>
@@ -69,6 +66,7 @@
             </div>
         </div>
     </div>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -199,4 +197,4 @@
             setInterval(fetchData, 2000); // Refresh every 20 seconds
         });
     </script>
-</x-app-layout>
+</x-guest-layout>

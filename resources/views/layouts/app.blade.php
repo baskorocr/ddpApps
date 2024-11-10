@@ -28,9 +28,9 @@
     <div x-data="mainState" :class="{ dark: isDarkMode }" x-on:resize.window="handleWindowResize" x-cloak>
         <div class="min-h-screen text-gray-900 bg-gray-100 dark:bg-dark-eval-0 dark:text-gray-200">
             <!-- Sidebar -->
-            @if (Auth::user() && Auth::user()->role != 'users')
-                <x-sidebar.sidebar />
-            @endif
+
+            <x-sidebar.sidebar />
+
 
             <!-- Page Wrapper -->
             <div class="flex flex-col min-h-screen"

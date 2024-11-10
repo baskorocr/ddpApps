@@ -1,9 +1,8 @@
-<x-app-layout>
+<x-guest-layout>
     <x-slot name="header">
     </x-slot>
 
-    <!-- Main Content -->
-    <div class="flex flex-col items-center justify-center bg-green-300 py-10 space-y-6">
+    <div class="flex flex-col items-center justify-center bg-green-300 py-10 space-y-6 min-h-screen">
         <!-- Heading Above Both Buttons -->
         <h1 class="text-3xl md:text-4xl font-bold text-black mb-8">Select Role Work</h1>
 
@@ -21,4 +20,5 @@
             </a>
         </div>
     </div>
-</x-app-layout>
+
+</x-guest-layout>

@@ -18,25 +18,17 @@ class Parts extends Model
 
     public $timestamps = false;
     protected $fillable = [
-        'idCustomer',
-        'item'
+        'item',
+        'idType'
 
     ];
 
 
 
-    public function type()
+    public function typePart()
     {
-        return $this->belongsTo(TypeParts::class, 'idType');
+        return $this->belongsTo(typeParts::class, 'idType');
     }
 
-    public function color()
-    {
-        return $this->belongsTo(Colors::class, 'idColor');
-    }
-    public function line()
-    {
-        return $this->belongsTo(line::class, 'idLine');
-    }
 
 }
