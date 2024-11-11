@@ -14,6 +14,8 @@ use App\Http\Controllers\ItemDefactController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\PartController;
+use App\Http\Controllers\ProsesController;
+use App\Http\Controllers\reports;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +53,7 @@ Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin'], function () 
     Route::resource('item_defacts', ItemDefactController::class);
 
 
+
 });
 Route::group(['middleware' => ['role:supervisor'], 'prefix' => 'supervisor'], function () {
     Route::get('/dashboard', [SupervisorController::class, 'index'])->name('supervisor.dashboard');
@@ -60,18 +63,22 @@ Route::group(['middleware' => ['role:supervisor'], 'prefix' => 'supervisor'], fu
 });
 
 
+
+
+Route::get('/reports', [reports::class, 'filterData'])->name('reports.index');
+Route::get('/reports/export', [reports::class, 'exportData'])->name('reports.export');
 Route::group(['middleware' => ['role:users'], 'prefix' => 'users'], function () {
     Route::get('/dashboard', [UserController::class, 'home'])->name('users.dashboard');
-    Route::get('/q1', [UserController::class, 'q1'])->name('users.q1');
-    Route::get('/q2', [UserController::class, 'q2'])->name('users.q2');
-    Route::post('/storeReqQ1', [UserController::class, 'storeReqQ1']);
-    Route::post('/storeReqQ2', [UserController::class, 'storeReqQ2']);
-    Route::post('/getData', [UserController::class, 'getData']);
+    Route::get('/q1', [ProsesController::class, 'q1'])->name('users.q1');
+    Route::get('/q2', [ProsesController::class, 'q2'])->name('users.q2');
+    Route::post('/storeReqQ1', [ProsesController::class, 'storeReqQ1']);
+    Route::post('/storeReqQ2', [ProsesController::class, 'storeReqQ2']);
+    Route::post('/getData', [ProsesController::class, 'getData']);
 
 });
 
-Route::get('/count', [UserController::class, 'countShift']);
-Route::get('/countPart', [UserController::class, 'countPart']);
+Route::get('/count', [ProsesController::class, 'countShift']);
+Route::get('/countPart', [ProsesController::class, 'countPart']);
 
 // // useless routes
 // // Just to demo sidebar dropdown links active states.

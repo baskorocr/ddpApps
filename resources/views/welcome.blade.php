@@ -48,7 +48,7 @@
                                     <th class="border-b px-4 py-2">Color</th>
                                     <th class="border-b px-4 py-2">Total</th>
                                     <th class="border-b px-4 py-2">OK</th>
-                                    <th class="border-b px-4 py-2">Buffing</th>
+                                    <th class="border-b px-4 py-2">OK Buffing</th>
                                     <th class="border-b px-4 py-2">Repaint</th>
                                     <th class="border-b px-4 py-2">Out Total</th>
                                     <th class="border-b px-4 py-2">RSP %</th>
@@ -184,7 +184,7 @@
             }
 
             function fetchData() {
-                fetch("http://127.0.0.1:8000/countPart")
+                fetch("http://192.168.17.138:8000/countPart")
                     .then(response => response.json())
                     .then(data => {
                         updateTable(data);

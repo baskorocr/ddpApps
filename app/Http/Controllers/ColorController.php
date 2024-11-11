@@ -23,7 +23,9 @@ class ColorController extends Controller
         // Store the color
         Colors::create($validated);
 
-        return response()->json(['success' => true, 'message' => 'Color added successfully']);
+        return redirect()->route('colors.index');
+
+
     }
     // Mengupdate data warna
     public function update(Request $request, $id)
@@ -37,7 +39,9 @@ class ColorController extends Controller
         $color = Colors::findOrFail($id);
         $color->update($validated);
 
-        return response()->json(['success' => true, 'message' => 'Color updated successfully']);
+        return redirect()->route('colors.index');
+
+
     }
 
     // Menghapus warna

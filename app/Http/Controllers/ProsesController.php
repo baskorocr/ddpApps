@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\itemDefects;
 use App\Models\typeParts;
-use Illuminate\Http\Request;
+
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Colors;
 use Illuminate\Http\RedirectResponse;
@@ -24,133 +24,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
-class UserController extends Controller
+class ProsesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $user = User::All();
-
-        return view('supervisor.user', compact('user')); // Make sure this view exists
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $dept = Dept::all();
-
-        return view('supervisor.usermanagement.create', compact('dept')); // Return view for creating user
-    }
-
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'npk' => 'required|string|max:255|unique:users',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|max:50', // Include role in validation
-            'noWa' => 'nullable|string|max:15', // Make WhatsApp number optional
-        ]);
-
-        User::create([
-            'npk' => $request->npk,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => $request->role, // Include role in creation
-            'noWa' => $request->noWa, // Store the WhatsApp number (nullable)
-        ]);
-
-        return redirect()->route('user.index')->with('success', 'User created successfully.');
-    }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Request $request): View
-    {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
-    }
-
-    public function deleteUser($id)
-    {
-        $user = User::findOrFail($id);
-
-        // Hapus user dari database
-        $user->delete();
-
-        // Redirect kembali ke halaman daftar user dengan pesan sukses
-        return redirect()->route('user.index')->with('success', 'User deleted successfully.');
-    }
-
-    public function home()
-    {
-
-        return view('user.home', );
-    }
-
     public function q1()
     {
         $types = typeParts::all();
@@ -599,6 +475,4 @@ class UserController extends Controller
 
 
     }
-
-
 }

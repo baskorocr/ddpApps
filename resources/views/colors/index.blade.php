@@ -154,7 +154,7 @@
                 });
 
                 if (response.ok) {
-                    alert('Color added successfully!');
+                    // alert('Color added successfully!');
                     location.reload();
                 } else {
                     const errorData = await response.json();
@@ -199,7 +199,7 @@
                 });
 
                 if (response.ok) {
-                    alert('Color updated successfully!');
+                    // alert('Color updated successfully!');
                     location.reload();
                 } else {
                     const errorData = await response.json();

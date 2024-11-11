@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\ProsesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('part-names/{typeId}', [UserController::class, 'getPartNames']);
-Route::get('/item-defacts/{typeId}', [UserController::class, 'getItemDefactsByType']);
-Route::get('/item-defacts/{item}/{typeId}/{typePart}{namePart}', [UserController::class, 'getData']);
+Route::get('part-names/{typeId}', [ProsesController::class, 'getPartNames']);
+Route::get('/item-defacts/{typeId}', [ProsesController::class, 'getItemDefactsByType']);
+Route::get('/item-defacts/{item}/{typeId}/{typePart}{namePart}', [ProsesController::class, 'getData']);

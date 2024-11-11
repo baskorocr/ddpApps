@@ -1,5 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     </x-slot>
 
@@ -238,7 +239,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             function updateCounts() {
-                fetch("http://127.0.0.1:8000/count")
+                fetch("http://192.168.17.138:8000/count")
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById("ok-item").textContent =
