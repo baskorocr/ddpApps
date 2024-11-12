@@ -66,36 +66,45 @@
     </div>
 
     <!-- Modal for Create New Defect Type -->
+    <!-- Modal for Create New Defect Type with Multiple Entries -->
     <div id="createDefectModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex justify-center items-center">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-96">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Add New Defect Type') }}
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Add New Defect Types') }}
             </h2>
 
             <form id="createDefectForm" method="POST" action="{{ route('type_defects.store') }}">
                 @csrf
-                <div class="space-y-4">
-                    <div>
-                        <label for="type"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Type') }}</label>
-                        <input type="text" name="type" id="type"
+                <div id="defectInputs">
+                    <div class="defect-entry space-y-4">
+                        <label for="type[]" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {{ __('Defect Type') }}
+                        </label>
+                        <input type="text" name="type[]"
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                             required>
                     </div>
+                </div>
 
-                    <div class="flex justify-between">
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
-                            {{ __('Add Defect Type') }}
-                        </button>
-                        <button type="button" id="closeCreateModal"
-                            class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
-                            {{ __('Close') }}
-                        </button>
-                    </div>
+
+
+                <button type="button" id="addDefectInput"
+                    class="mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
+                    {{ __('Add More Customers') }}
+                </button>
+                <div class="flex justify-between mt-4">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
+                        {{ __('Add Defect Types') }}
+                    </button>
+                    <button type="button" id="closeCreateModal"
+                        class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
+                        {{ __('Close') }}
+                    </button>
                 </div>
             </form>
         </div>
     </div>
+
 
     <!-- Modal for Edit Defect Type -->
     <div id="editDefectModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex justify-center items-center">
@@ -133,17 +142,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const openCreateModalButton = document.getElementById('openCreateModal');
-            const createModal = document.getElementById('createDefectModal');
-            const closeCreateModalButton = document.getElementById('closeCreateModal');
 
-            openCreateModalButton.addEventListener('click', function() {
-                createModal.classList.remove('hidden');
-            });
-
-            closeCreateModalButton.addEventListener('click', function() {
-                createModal.classList.add('hidden');
-            });
 
             const editDefectModal = document.getElementById('editDefectModal');
             const closeEditModalButton = document.getElementById('closeEditModal');
@@ -169,6 +168,34 @@
 
             closeEditModalButton.addEventListener('click', function() {
                 editDefectModal.classList.add('hidden');
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const openCreateModalButton = document.getElementById('openCreateModal');
+            const createModal = document.getElementById('createDefectModal');
+            const closeCreateModalButton = document.getElementById('closeCreateModal');
+            const addDefectInputButton = document.getElementById('addDefectInput');
+            const defectInputsContainer = document.getElementById('defectInputs');
+
+            openCreateModalButton.addEventListener('click', function() {
+                createModal.classList.remove('hidden');
+            });
+
+            closeCreateModalButton.addEventListener('click', function() {
+                createModal.classList.add('hidden');
+            });
+
+            addDefectInputButton.addEventListener('click', function() {
+                const newDefectInput = document.createElement('div');
+                newDefectInput.classList.add('defect-entry', 'space-y-4');
+                newDefectInput.innerHTML = `
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Defect Type') }}</label>
+            <input type="text" name="type[]" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600" required>
+        `;
+                defectInputsContainer.appendChild(newDefectInput);
             });
         });
     </script>

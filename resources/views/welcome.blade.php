@@ -18,18 +18,19 @@
 
                     <!-- Column 2: Text (Dharma Poliplash) -->
                     <div class="flex flex-col items-center text-center">
-                        <span class="text-3xl font-semibold">PT Dharma Poliplast</span>
-                        <span class="text-sm font-semibold mt-3">RTMP (Real Time Monitoring Project)</span>
+
+                        <span class="text-5xl font-semibold mt-3 text-black dark:text-yellow-500">QUALITY RATE
+                            PAINTING LINE</span>
                     </div>
 
                     <!-- Column 3: Date/Time -->
                     <div class="text-center md:text-right">
                         <!-- Tanggal -->
-                        <div id="current-date" class="text-center text-xl font-medium">
+                        <div id="current-date" class="text-center text-xl font-medium  text-black dark:text-yellow-500">
                             {{ \Carbon\Carbon::now()->format('Y-m-d') }}
                         </div>
                         <!-- Waktu -->
-                        <div id="current-time" class="text-center text-xl font-medium">
+                        <div id="current-time" class="text-center text-xl font-medium ">
                             {{ \Carbon\Carbon::now()->format('H:i:s') }}
                         </div>
                     </div>
@@ -42,19 +43,53 @@
                         <table id="part-data-table" class="min-w-full table-auto border-collapse h-full">
                             <thead>
                                 <tr>
-                                    <th class="border-b px-4 py-2">Customer</th>
-                                    <th class="border-b px-4 py-2">Part Name</th>
-                                    <th class="border-b px-4 py-2">Type</th>
-                                    <th class="border-b px-4 py-2">Color</th>
-                                    <th class="border-b px-4 py-2">Total</th>
-                                    <th class="border-b px-4 py-2">OK</th>
-                                    <th class="border-b px-4 py-2">OK Buffing</th>
-                                    <th class="border-b px-4 py-2">Repaint</th>
-                                    <th class="border-b px-4 py-2">Out Total</th>
-                                    <th class="border-b px-4 py-2">RSP %</th>
-                                    <th class="border-b px-4 py-2">FSP %</th>
-                                    <th class="border-b px-4 py-2">Repaint %</th>
-                                    <th class="border-b px-4 py-2">Out Total %</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Customer</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Part Name</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Type</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Color</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Unload</th>
+                                    <th hidden
+                                        class="hidden border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        OK</th>
+                                    <th hidden
+                                        class="hidden border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        OK Buffing</th>
+                                    <th hidden
+                                        class="hidden border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Repaint</th>
+                                    <th hidden
+                                        class="hidden border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Out Total</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        RSP %</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        FSP %</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Repaint %</th>
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Out Total %</th>
+
+                                    <th
+                                        class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
+                                        Pareto</th>
+                                </tr>
+
+
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -161,30 +196,32 @@
                 rowCells[10].textContent = fsp.toFixed(2) + '%';
                 rowCells[11].textContent = repaintPercentage.toFixed(2) + '%';
                 rowCells[12].textContent = outTotalPercentage.toFixed(2) + '%';
+                rowCells[13].textContent = item.Most_Frequent_Description || '-';
             }
 
             function createRow(item, totalAll, rsp, fsp, repaintPercentage, outTotalPercentage) {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                   <td class="border-b px-4 py-2 text-center">${item.Customer_Name}</td>
-                    <td class="border-b px-4 py-2 text-center">${item.Item}</td>
-                    <td class="border-b px-4 py-2 text-center">${item.Part_Type}</td>
-                    <td class="border-b px-4 py-2 text-center">${item.Color}</td>
-                    <td class="border-b px-4 py-2 text-center">${totalAll}</td>
-                    <td class="border-b px-4 py-2 text-center">${item.Total_OK_Count}</td>
-                    <td class="border-b px-4 py-2 text-center">${item.Total_OK_Buffing_Count}</td>
-                    <td class="border-b px-4 py-2 text-center">${item.Total_Count_Repaint}</td>
-                    <td class="border-b px-4 py-2 text-center">${item.Total_Count_OutTotal}</td>
-                    <td class="border-b px-4 py-2 text-center">${rsp.toFixed(2)}%</td>
-                    <td class="border-b px-4 py-2 text-center">${fsp.toFixed(2)}%</td>
-                    <td class="border-b px-4 py-2 text-center">${repaintPercentage.toFixed(2)}%</td>
-                    <td class="border-b px-4 py-2 text-center">${outTotalPercentage.toFixed(2)}%</td>
+                   <td class="text-3xl border-b px-4 py-2 text-center">${item.Customer_Name}</td>
+                    <td class="text-3xl text-black dark:text-yellow-500 border-b px-4 py-2 text-center">${item.Item}</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${item.Part_Type}</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${item.Color}</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${totalAll}</td>
+                    <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_OK_Count}</td>
+                    <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_OK_Buffing_Count}</td>
+                    <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_Count_Repaint}</td>
+                    <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_Count_OutTotal}</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${rsp.toFixed(2)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${fsp.toFixed(2)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${repaintPercentage.toFixed(2)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${outTotalPercentage.toFixed(2)}%</td>
+                      <td class="text-3xl border-b px-4 py-2 text-center">${item.Most_Frequent_Description || '-'}</td>
                             `;
                 return row;
             }
 
             function fetchData() {
-                fetch("http://192.168.17.138:8000/countPart")
+                fetch("http://127.0.0.1:8000/countPart")
                     .then(response => response.json())
                     .then(data => {
                         updateTable(data);

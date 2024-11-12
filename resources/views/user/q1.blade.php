@@ -239,7 +239,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             function updateCounts() {
-                fetch("http://192.168.17.138:8000/count")
+                fetch("http://192.168.27.173:8000/count")
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById("ok-item").textContent =

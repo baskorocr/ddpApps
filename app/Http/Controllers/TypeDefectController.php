@@ -20,14 +20,15 @@ class TypeDefectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'type' => 'required|string|max:255',
+            'type' => 'required|array',
+            'type.*' => 'required|string|max:255',
         ]);
 
-        typeDefect::create([
-            'type' => $request->type,
-        ]);
+        // Insert multiple entries
+        $types = array_map(fn($type) => ['type' => $type], $request->type);
+        TypeDefect::insert($types);
 
-        return redirect()->route('type_defects.index');
+        return redirect()->route('type_defects.index')->with('success', 'Defect types added successfully.');
     }
 
     public function update(Request $request, $id)
