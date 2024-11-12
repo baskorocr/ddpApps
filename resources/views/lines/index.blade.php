@@ -58,29 +58,34 @@
     <!-- Modal for Create New Line -->
     <div id="createLineModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex justify-center items-center">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-96">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Add New Line') }}</h2>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Add New Lines') }}</h2>
 
             <form id="createLineForm" method="POST" action="{{ route('lines.store') }}">
                 @csrf
-                <div class="space-y-4">
+                <div id="lineFieldsContainer" class="space-y-4">
                     <div>
                         <label for="nameLine"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Line Name') }}</label>
-                        <input type="text" name="nameLine" id="nameLine"
+                        <input type="text" name="nameLine[]" id="nameLine"
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                             required>
                     </div>
+                </div>
 
-                    <div class="flex justify-between">
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
-                            {{ __('Add Line') }}
-                        </button>
-                        <button type="button" id="closeCreateModal"
-                            class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
-                            {{ __('Close') }}
-                        </button>
-                    </div>
+                <button type="button" id="addMoreLines"
+                    class="mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
+                    {{ __('Add More Lines') }}
+                </button>
+
+                <div class="flex justify-between mt-4">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
+                        {{ __('Add Lines') }}
+                    </button>
+                    <button type="button" id="closeCreateModal"
+                        class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
+                        {{ __('Close') }}
+                    </button>
                 </div>
             </form>
         </div>
@@ -125,13 +130,27 @@
             const openCreateModalButton = document.getElementById('openCreateModal');
             const createModal = document.getElementById('createLineModal');
             const closeCreateModalButton = document.getElementById('closeCreateModal');
+            const lineFieldsContainer = document.getElementById('lineFieldsContainer');
+            const addMoreLinesButton = document.getElementById('addMoreLines');
 
+            // Show Create Modal
             openCreateModalButton.addEventListener('click', () => {
                 createModal.classList.remove('hidden');
             });
 
+            // Close Create Modal
             closeCreateModalButton.addEventListener('click', () => {
                 createModal.classList.add('hidden');
+            });
+
+            // Add more line fields
+            addMoreLinesButton.addEventListener('click', () => {
+                const newLineField = document.createElement('div');
+                newLineField.innerHTML =
+                    `
+                    <label for="nameLine" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Line Name') }}</label>
+                    <input type="text" name="nameLine[]" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600" required>`;
+                lineFieldsContainer.appendChild(newLineField);
             });
 
             // Edit modal functionality
@@ -157,6 +176,7 @@
                 });
             });
 
+            // Close Edit Modal
             closeEditModalButton.addEventListener('click', () => {
                 editModal.classList.add('hidden');
             });

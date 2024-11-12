@@ -16,16 +16,17 @@ class ColorController extends Controller
     // Menyimpan warna baru
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'color' => 'required|string|max:255',
+        $request->validate([
+            'color' => 'required|array|min:1',
+            'color.*' => 'required|string|max:255',
         ]);
 
-        // Store the color
-        Colors::create($validated);
+        // Loop through each color entry and create a new Color record
+        foreach ($request->color as $colorName) {
+            Colors::create(['color' => $colorName]);
+        }
 
-        return redirect()->route('colors.index');
-
-
+        return response()->json(['success' => 'Colors added successfully!'], 200);
     }
     // Mengupdate data warna
     public function update(Request $request, $id)

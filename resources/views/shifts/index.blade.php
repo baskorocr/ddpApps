@@ -58,29 +58,35 @@
     <!-- Modal for Create New Shift -->
     <div id="createShiftModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex justify-center items-center">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-96">
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Add New Shift') }}</h2>
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ __('Add New Shifts') }}</h2>
 
             <form method="POST" action="{{ route('shifts.store') }}">
                 @csrf
-                <div class="space-y-4">
-                    <div>
+                <div class="space-y-4" id="shiftFieldsContainer">
+                    <div class="shift-field">
                         <label for="shift"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Shift') }}</label>
-                        <input type="text" name="shift" id="shift"
+                        <input type="text" name="shift[]"
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                             required>
                     </div>
+                </div>
 
-                    <div class="flex justify-between">
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
-                            {{ __('Add Shift') }}
-                        </button>
-                        <button type="button" id="closeCreateModal"
-                            class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
-                            {{ __('Close') }}
-                        </button>
-                    </div>
+                <!-- Button to add more shift input fields -->
+                <button type="button" id="addShiftField"
+                    class="mt-3 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white px-4 py-2 rounded-md">
+                    {{ __('Add Another Shift') }}
+                </button>
+
+                <div class="flex justify-between mt-4">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
+                        {{ __('Add Shifts') }}
+                    </button>
+                    <button type="button" id="closeCreateModal"
+                        class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
+                        {{ __('Close') }}
+                    </button>
                 </div>
             </form>
         </div>
@@ -122,17 +128,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const openCreateModalButton = document.getElementById('openCreateModal');
-            const createModal = document.getElementById('createShiftModal');
-            const closeCreateModalButton = document.getElementById('closeCreateModal');
 
-            openCreateModalButton.addEventListener('click', () => {
-                createModal.classList.remove('hidden');
-            });
-
-            closeCreateModalButton.addEventListener('click', () => {
-                createModal.classList.add('hidden');
-            });
 
             // Edit modal functionality
             const editButtons = document.querySelectorAll('.editShiftBtn');
@@ -160,6 +156,32 @@
 
             closeEditModalButton.addEventListener('click', () => {
                 editModal.classList.add('hidden');
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const createModal = document.getElementById('createShiftModal');
+            const closeCreateModalButton = document.getElementById('closeCreateModal');
+            const addShiftFieldButton = document.getElementById('addShiftField');
+            const shiftFieldsContainer = document.getElementById('shiftFieldsContainer');
+
+            document.getElementById('openCreateModal').addEventListener('click', () => {
+                createModal.classList.remove('hidden');
+            });
+
+            closeCreateModalButton.addEventListener('click', () => {
+                createModal.classList.add('hidden');
+            });
+
+            addShiftFieldButton.addEventListener('click', () => {
+                const newField = document.createElement('div');
+                newField.classList.add('shift-field');
+                newField.innerHTML = `
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Shift') }}</label>
+                <input type="text" name="shift[]" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600" required>
+            `;
+                shiftFieldsContainer.appendChild(newField);
             });
         });
     </script>

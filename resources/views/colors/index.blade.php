@@ -18,16 +18,13 @@
                     <tr>
                         <th
                             class="px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            {{ __('ID') }}
-                        </th>
+                            {{ __('ID') }}</th>
                         <th
                             class="px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            {{ __('Color') }}
-                        </th>
+                            {{ __('Color') }}</th>
                         <th
                             class="px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            {{ __('Actions') }}
-                        </th>
+                            {{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
@@ -59,40 +56,46 @@
         </div>
     </div>
 
-    <!-- Modal for Create New Color -->
-    <div id="createColorModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex justify-center items-center">
+    <!-- Modal for Create New Colors -->
+    <div id="createColorModal"
+        class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex justify-center items-center z-50">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-96">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                {{ __('Add New Color') }}
+                {{ __('Add New Colors') }}
             </h2>
 
             <form id="createColorForm" method="POST" action="{{ route('colors.store') }}">
                 @csrf
-                <div class="space-y-4">
+                <div id="colorFields" class="space-y-4">
                     <div>
-                        <label for="color"
+                        <label for="color[]"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Color Name') }}</label>
-                        <input type="text" name="color" id="color"
+                        <input type="text" name="color[]" id="color"
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
                             required>
                     </div>
-                    <div class="flex justify-between">
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
-                            {{ __('Add Color') }}
-                        </button>
-                        <button type="button" id="closeCreateModal"
-                            class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
-                            {{ __('Close') }}
-                        </button>
-                    </div>
+                </div>
+                <button type="button" id="addMoreColors"
+                    class="mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
+                    {{ __('Add More Colors') }}
+                </button>
+                <div class="flex justify-between mt-4">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
+                        {{ __('Add Colors') }}
+                    </button>
+                    <button type="button" id="closeCreateModal"
+                        class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
+                        {{ __('Close') }}
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal for Edit Color -->
-    <div id="editColorModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex justify-center items-center">
+    <!-- Modal for Editing Colors -->
+    <div id="editColorModal"
+        class="fixed inset-0 bg-gray-500 bg-opacity-50 hidden flex justify-center items-center z-50">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-96">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
                 {{ __('Edit Color') }}
@@ -101,26 +104,23 @@
             <form id="editColorForm" method="POST">
                 @csrf
                 @method('PUT')
-                <input type="hidden" id="editColorId" name="color_id" value="">
-
-                <div class="space-y-4">
-                    <div>
-                        <label for="editColor"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Color Name') }}</label>
-                        <input type="text" name="color" id="editColor"
-                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                            required>
-                    </div>
-                    <div class="flex justify-between">
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
-                            {{ __('Update Color') }}
-                        </button>
-                        <button type="button" id="closeEditModal"
-                            class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
-                            {{ __('Close') }}
-                        </button>
-                    </div>
+                <div>
+                    <label for="editColor" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {{ __('Color Name') }}
+                    </label>
+                    <input type="text" id="editColor" name="color"
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                        required>
+                </div>
+                <div class="flex justify-between mt-4">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
+                        {{ __('Update Color') }}
+                    </button>
+                    <button type="button" id="closeEditModal"
+                        class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md">
+                        {{ __('Close') }}
+                    </button>
                 </div>
             </form>
         </div>
@@ -129,23 +129,38 @@
     <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        // Create Modal
+        // Show Create Modal
         document.getElementById('openCreateModal').addEventListener('click', () => {
+            console.log('Opening Create Modal');
             document.getElementById('createColorModal').classList.remove('hidden');
         });
 
+        // Close Create Modal
         document.getElementById('closeCreateModal').addEventListener('click', () => {
+            console.log('Closing Create Modal');
             document.getElementById('createColorModal').classList.add('hidden');
         });
 
+        // Add More Color Fields
+        document.getElementById('addMoreColors').addEventListener('click', () => {
+            const colorFieldsContainer = document.getElementById('colorFields');
+            const newColorField = document.createElement('div');
+            newColorField.innerHTML = `
+                <label for="color[]"
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Color Name') }}</label>
+                <input type="text" name="color[]" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                    required>`;
+            colorFieldsContainer.appendChild(newColorField);
+        });
+
+        // Handle Create Form Submission
         document.getElementById('createColorForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const formData = new FormData(this);
-            const actionUrl = this.action;
 
             try {
-                const response = await fetch(actionUrl, {
+                const response = await fetch("{{ route('colors.store') }}", {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
@@ -154,60 +169,36 @@
                 });
 
                 if (response.ok) {
-                    // alert('Color added successfully!');
                     location.reload();
                 } else {
                     const errorData = await response.json();
-                    alert(`Failed to add color: ${errorData.message || 'Unknown error'}`);
+                    alert(`Failed to add colors: ${errorData.message || 'Unknown error'}`);
                 }
             } catch (error) {
                 alert(`Error: ${error.message}`);
             }
         });
 
-        // Edit Modal
+        // Show the Edit Modal when Edit button is clicked
         document.querySelectorAll('.editColorBtn').forEach(button => {
             button.addEventListener('click', () => {
-                const id = button.getAttribute('data-id');
-                const color = button.getAttribute('data-color');
+                console.log('Opening Edit Modal');
+                const colorId = button.getAttribute('data-id');
+                const colorName = button.getAttribute('data-color');
+
+                document.getElementById('editColorForm').action =
+                    `/{{ auth()->user()->role }}/colors/${colorId}`;
+
+                document.getElementById('editColor').value = colorName;
 
                 document.getElementById('editColorModal').classList.remove('hidden');
-                document.getElementById('editColorId').value = id;
-                document.getElementById('editColor').value = color;
-                document.getElementById('editColorForm').action =
-                    `/{{ auth()->user()->role }}/colors/${id}`;
             });
         });
 
+        // Close Edit Modal
         document.getElementById('closeEditModal').addEventListener('click', () => {
+            console.log('Closing Edit Modal');
             document.getElementById('editColorModal').classList.add('hidden');
-        });
-
-        document.getElementById('editColorForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            const actionUrl = this.action;
-
-            try {
-                const response = await fetch(actionUrl, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                    },
-                    body: formData,
-                });
-
-                if (response.ok) {
-                    // alert('Color updated successfully!');
-                    location.reload();
-                } else {
-                    const errorData = await response.json();
-                    alert(`Failed to update color: ${errorData.message || 'Unknown error'}`);
-                }
-            } catch (error) {
-                alert(`Error: ${error.message}`);
-            }
         });
     </script>
 </x-app-layout>

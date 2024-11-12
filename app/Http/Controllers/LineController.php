@@ -24,12 +24,18 @@ class LineController extends Controller
 
     public function store(Request $request)
     {
+        // Validate the input to ensure it's an array of line names
         $request->validate([
-            'nameLine' => 'required|string|max:255',
+            'nameLine' => 'required|array',
+            'nameLine.*' => 'required|string|max:255',
         ]);
 
-        line::create($request->all());
-        return redirect()->route('lines.index');
+        // Loop through each name in the 'nameLine' array and create a new Line
+        foreach ($request->nameLine as $name) {
+            Line::create(['nameLine' => $name]);
+        }
+
+        return redirect()->route('lines.index')->with('success', 'Lines added successfully.');
     }
 
     public function edit(line $line)

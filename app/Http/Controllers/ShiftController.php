@@ -13,19 +13,22 @@ class ShiftController extends Controller
         return view('shifts.index', compact('shifts'));
     }
 
+
     public function store(Request $request)
     {
+        // Validate the input to ensure it's an array of shift names
         $request->validate([
-            'shift' => 'required|string|max:255',
+            'shift' => 'required|array',
+            'shift.*' => 'required|string|max:255',
         ]);
 
-        shift::create([
-            'shift' => $request->shift,
-        ]);
+        // Loop through each shift name and create a new Shift entry
+        foreach ($request->shift as $shiftName) {
+            Shift::create(['shift' => $shiftName]);
+        }
 
-        return redirect()->route('shifts.index');
+        return redirect()->route('shifts.index')->with('success', 'Shifts added successfully.');
     }
-
     public function edit(shift $shift)
     {
         return view('shifts.edit', compact('shift'));

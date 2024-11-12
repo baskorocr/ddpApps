@@ -28,17 +28,16 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|array',
+            'name.*' => 'required|string|max:255',
         ]);
 
-        $customer = Customer::create([
-            'name' => $request->name,
-        ]);
+        // Loop untuk menyimpan beberapa pelanggan sekaligus
+        foreach ($request->name as $name) {
+            Customer::create(['name' => $name]);
+        }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Customer added successfully!',
-        ]);
+        return response()->json(['message' => 'Customers added successfully'], 200);
     }
 
 
