@@ -36,6 +36,19 @@
                     </div>
                 </div>
 
+                <div class="flex">
+                    <div class="mt-4">
+                        <label for="line-select" class="text-2xl font-semibold">Select Line:</label>
+                        <select id="line-select"
+                            class="w-full p-2 border rounded-md shadow-md dark:bg-dark-eval-1 text-2xl">
+                            <option value="">-- Select a Line --</option>
+                            @foreach ($lines as $line)
+                                <option value="{{ $line->id }}">{{ $line->nameLine }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <!-- Table Section -->
                 <div class="h-full">
                     <!-- Table Container with horizontal scroll for responsiveness -->
@@ -45,19 +58,19 @@
                                 <tr>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        Customer</th>
+                                        CUSTOMER</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        Part Name</th>
+                                        PART NAME</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        Type</th>
+                                        TYPE</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        Color</th>
+                                        COLOR</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        Unload</th>
+                                        UNLOAD</th>
                                     <th hidden
                                         class="hidden border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
                                         OK</th>
@@ -72,20 +85,20 @@
                                         Out Total</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        RSP %</th>
+                                        RSP</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        FSP %</th>
+                                        FSP</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        Repaint %</th>
+                                        REPAINT</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        Out Total %</th>
+                                        OUT TOTAL</th>
 
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        Pareto</th>
+                                        DEFACT</th>
                                 </tr>
 
 
@@ -146,6 +159,7 @@
 
             function updateTable(data) {
                 const tableBody = document.querySelector('#part-data-table tbody');
+
 
                 data.forEach(item => {
                     const totalAll = item.Total_OK_Count + item.Total_OK_Buffing_Count + item
@@ -211,17 +225,32 @@
                     <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_OK_Buffing_Count}</td>
                     <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_Count_Repaint}</td>
                     <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_Count_OutTotal}</td>
-                    <td class="text-3xl border-b px-4 py-2 text-center">${rsp.toFixed(2)}%</td>
-                    <td class="text-3xl border-b px-4 py-2 text-center">${fsp.toFixed(2)}%</td>
-                    <td class="text-3xl border-b px-4 py-2 text-center">${repaintPercentage.toFixed(2)}%</td>
-                    <td class="text-3xl border-b px-4 py-2 text-center">${outTotalPercentage.toFixed(2)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${rsp.toFixed(0)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${fsp.toFixed(0)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${repaintPercentage.toFixed(0)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${outTotalPercentage.toFixed(0)}%</td>
                       <td class="text-3xl border-b px-4 py-2 text-center">${item.Most_Frequent_Description || '-'}</td>
                             `;
                 return row;
             }
 
+            const lineSelect = document.getElementById("line-select");
+            let selectedLineId = lineSelect.value;
+
+            // Update table when line selection changes
+            lineSelect.addEventListener("change", () => {
+                selectedLineId = lineSelect.value;
+                fetchData();
+            });
+
             function fetchData() {
-                fetch("http://127.0.0.1:8000/countPart")
+                const url = selectedLineId ?
+                    `http://127.0.0.1:8000/countPart?line=${selectedLineId}` :
+                    "http://127.0.0.1:8000/countPart";
+
+                console.log(url);
+
+                fetch(url)
                     .then(response => response.json())
                     .then(data => {
                         updateTable(data);

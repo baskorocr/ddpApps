@@ -412,7 +412,7 @@ class ProsesController extends Controller
     }
 
 
-    public function countPart()
+    public function countPart(Request $request)
     {
 
 
@@ -462,72 +462,93 @@ class ProsesController extends Controller
         //     ->orderBy('p.item')              // Final sort by part item
         //     ->get();
 
-        $result = DB::table('fix_proses as fp')
-            ->join('parts as p', 'fp.idPart', '=', 'p.id')
-            ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-            ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-            ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-            ->select(
-                'c.name as Customer_Name',
-                'tp.type as Part_Type',
-                'cl.color as Color',
-                'p.item as Item',
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-                 COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
-                 COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
-                 COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
-                DB::raw('
-            CASE 
-                WHEN COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) > COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) 
-                THEN MAX(CASE WHEN fp.typeDefact = "REPAINT" THEN fp.keterangan END) 
-                ELSE MAX(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN fp.keterangan END) 
-            END as Most_Frequent_Description')
-            )
-            ->whereDate('fp.created_at', '=', \Carbon\Carbon::today()->toDateString()) // Filter by today's date
-            ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
-            ->orderByDesc('fp.created_at')  // Order by the most recent creation date
-            ->orderBy('c.name')              // Secondary sort by customer name
-            ->orderBy('tp.type')             // Tertiary sort by part type
-            ->orderBy('cl.color')            // Quaternary sort by color
-            ->orderBy('p.item')              // Final sort by part item
-            ->get();
-        $result = DB::table('fix_proses as fp')
-            ->join('parts as p', 'fp.idPart', '=', 'p.id')
-            ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-            ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-            ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-            ->select(
-                'c.name as Customer_Name',
-                'tp.type as Part_Type',
-                'cl.color as Color',
-                'p.item as Item',
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-                 COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
-                 COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
-                 COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
-                DB::raw('
-            CASE 
-                WHEN COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) > COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) 
-                THEN MAX(CASE WHEN fp.typeDefact = "REPAINT" THEN fp.keterangan END) 
-                ELSE MAX(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN fp.keterangan END) 
-            END as Most_Frequent_Description')
-            )
-            ->whereDate('fp.created_at', '=', \Carbon\Carbon::today()->toDateString()) // Filter by today's date
-            ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
-            ->orderByDesc('fp.created_at')  // Order by the most recent creation date
-            ->orderBy('c.name')              // Secondary sort by customer name
-            ->orderBy('tp.type')             // Tertiary sort by part type
-            ->orderBy('cl.color')            // Quaternary sort by color
-            ->orderBy('p.item')              // Final sort by part item
-            ->get();
+        // $result = DB::table('fix_proses as fp')
+        //     ->join('parts as p', 'fp.idPart', '=', 'p.id')
+        //     ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
+        //     ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
+        //     ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
+        //     ->select(
+        //         'c.name as Customer_Name',
+        //         'tp.type as Part_Type',
+        //         'cl.color as Color',
+        //         'p.item as Item',
+        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
+        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
+        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
+        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
+        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
+        //          COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
+        //          COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
+        //          COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
+        //         DB::raw('
+        //     CASE 
+        //         WHEN COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) > COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) 
+        //         THEN MAX(CASE WHEN fp.typeDefact = "REPAINT" THEN fp.keterangan END) 
+        //         ELSE MAX(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN fp.keterangan END) 
+        //     END as Most_Frequent_Description')
+        //     )
+        //     ->whereDate('fp.created_at', '=', \Carbon\Carbon::today()->toDateString()) // Filter by today's date
+        //     ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
+        //     ->orderByDesc('fp.created_at')  // Order by the most recent creation date
+        //     ->orderBy('c.name')              // Secondary sort by customer name
+        //     ->orderBy('tp.type')             // Tertiary sort by part type
+        //     ->orderBy('cl.color')            // Quaternary sort by color
+        //     ->orderBy('p.item')              // Final sort by part item
+        //     ->get();
+
+        $lineId = $request->query('line');
+
+        try {
+            $result = DB::table('fix_proses as fp')
+                ->join('parts as p', 'fp.idPart', '=', 'p.id')
+                ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
+                ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
+                ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
+                ->select(
+                    'c.name as Customer_Name',
+                    'tp.type as Part_Type',
+                    'cl.color as Color',
+                    'p.item as Item',
+                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
+                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
+                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
+                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
+                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
+                     COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
+                     COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
+                     COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
+                    DB::raw('
+                CASE 
+                    WHEN COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) > COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END)
+                    THEN "Repaint Dominates"
+                    ELSE "Out Total Dominates"
+                END as Dominant_Type'
+                    ),
+                    DB::raw('
+                CASE 
+                    WHEN COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) > COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) 
+                    THEN MAX(CASE WHEN fp.typeDefact = "REPAINT" THEN fp.keterangan END) 
+                    ELSE MAX(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN fp.keterangan END) 
+                END as Most_Frequent_Description'
+                    )
+                )
+                ->whereDate('fp.created_at', Carbon::today())
+                ->when($lineId, function ($query) use ($lineId) {
+                    // Jika `lineId` ada, filter berdasarkan line
+                    return $query->where('fp.idLine', $lineId);
+                })
+                ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
+                ->orderByDesc('fp.created_at')
+                ->orderBy('c.name')
+                ->orderBy('tp.type')
+                ->orderBy('cl.color')
+                ->orderBy('p.item')
+                ->get();
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+
 
 
 
