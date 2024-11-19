@@ -239,9 +239,13 @@
 
             // Update table when line selection changes
             lineSelect.addEventListener("change", () => {
+                const tableBody = document.querySelector('#part-data-table tbody');
+                tableBody.innerHTML = ''; // 
                 selectedLineId = lineSelect.value;
                 fetchData();
             });
+
+
 
             function fetchData() {
                 const url = selectedLineId ?

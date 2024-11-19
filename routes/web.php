@@ -78,7 +78,7 @@ Route::group(['middleware' => ['role:users'], 'prefix' => 'users'], function () 
 });
 
 Route::get('/count', [ProsesController::class, 'countShift']);
-Route::get('/countPart', [ProsesController::class, 'countPart']);
+Route::get('/countPart', [ProsesController::class, 'countPart'])->name('count-parts');
 
 // // useless routes
 // // Just to demo sidebar dropdown links active states.

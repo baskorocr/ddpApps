@@ -1,6 +1,6 @@
 <x-guest-layout>
     <x-slot name="header">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
     </x-slot>
 
@@ -151,12 +151,12 @@
         function fetchPartNames() {
             const partTypeId = document.getElementById('part_type').value;
             const partNameSelect = document.getElementById('part_name');
-
+            const url = `{{ route('part-names', ':partTypeId') }}`.replace(':partTypeId', partTypeId);
             // Clear previous options
             partNameSelect.innerHTML = '<option value="">Select Part Name</option>';
 
             if (partTypeId) {
-                fetch(`/api/part-names/${partTypeId}`)
+                fetch(url)
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
