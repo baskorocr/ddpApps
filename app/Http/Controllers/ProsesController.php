@@ -537,7 +537,7 @@ class ProsesController extends Controller
                     // Jika `lineId` ada, filter berdasarkan line
                     return $query->where('fp.idLine', $lineId);
                 })
-                ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
+                ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item', 'fp.created_at')
                 ->orderByDesc('fp.created_at')
                 ->orderBy('c.name')
                 ->orderBy('tp.type')
