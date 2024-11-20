@@ -256,17 +256,19 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             function updateCounts() {
-                fetch("http://192.168.27.173:8000/count")
+                const appUrl = "{{ env('APP.URL') }}";
+                const appPort = "{{ config('APP.ports') }}";
+                fetch(`${appUrl}/count`)
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById("ok-item").textContent =
-                            `OK: ${data.totalTypeOK} (${data.rsp}%)`;
+                            `OK: ${data.totalTypeOK} (RSP: ${Math.round(data.rsp)}%)`;
                         document.getElementById("buffing-item").textContent =
-                            `Buffing: ${data.totalTypeOkBuffing} (${data.fsp}%)`;
+                            `Buffing: ${data.totalTypeOkBuffing} (FSP: ${Math.round(data.fsp)}%)`;
                         document.getElementById("repaint-item").textContent =
-                            `Repaint: ${data.totalTypeRepaint} (${data.percentRepaint}%)`;
+                            `Repaint: ${data.totalTypeRepaint} (${Math.round(data.percentRepaint)}%)`;
                         document.getElementById("ot-item").textContent =
-                            `OT: ${data.totalTypeOutTotal} (${data.percentTypeOutTotal}%)`;
+                            `OT: ${data.totalTypeOutTotal} (${Math.round(data.percentTypeOutTotal)}%)`;
                     })
                     .catch(error => console.error("Error fetching count data:", error));
             }

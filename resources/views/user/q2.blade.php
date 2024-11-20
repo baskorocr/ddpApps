@@ -20,7 +20,8 @@
                     <!-- Left Column -->
                     <div>
                         <label for="part_type" class="block font-medium">Part Type</label>
-                        <select id="part_type" class="form-select w-full mt-2" onchange="fetchPartNames()">
+                        <select id="part_type" class="form-select w-full mt-2 text-black  dark:text-black"
+                            onchange="fetchPartNames()">
                             <option value="">Select Part Type</option>
                             @foreach ($types as $type)
                                 <option value="{{ $type->id }}">{{ $type->type }}</option>
@@ -28,12 +29,12 @@
                         </select>
 
                         <label for="part_name" class="block font-medium mt-4">Part Name</label>
-                        <select id="part_name" class="form-select w-full mt-2">
+                        <select id="part_name" class="form-select w-full mt-2 text-black  dark:text-black">
                             <option value="">Select Part Name</option>
                         </select>
 
                         <label for="color" class="block font-medium mt-4">Color</label>
-                        <select id="color" class="form-select w-full mt-2">
+                        <select id="color" class="form-select w-full mt-2 text-black  dark:text-black">
                             <option value="">Select Color</option>
                             @foreach ($colors as $color)
                                 <option value="{{ $color->id }}">{{ $color->color }}</option>
@@ -45,17 +46,17 @@
                     <div>
                         <label for="inspector_name" class="block font-medium">Inspector Name</label>
                         <input id="inspector_name" type="text" value="{{ auth()->user()->name }}"
-                            class="form-input w-full mt-2" readonly>
+                            class="form-input w-full mt-2 text-black  dark:text-black" readonly>
 
                         <label for="shift" class="block font-medium mt-4">Shift</label>
-                        <select id="shift" class="form-select w-full mt-2">
+                        <select id="shift" class="form-select w-full mt-2 text-black  dark:text-black">
                             <option value="">Select shift</option>
                             @foreach ($shifts as $shift)
                                 <option value="{{ $shift->id }}">{{ $shift->shift }}</option>
                             @endforeach
                         </select>
                         <label for="line" class="block font-medium mt-4">Line</label>
-                        <select id="line" class="form-select w-full mt-2">
+                        <select id="line" class="form-select w-full mt-2 text-black  dark:text-black">
                             <option value="">Select Line</option>
                             @foreach ($lines as $line)
                                 <option value="{{ $line->id }}">{{ $line->nameLine }}</option>
@@ -230,17 +231,18 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             function updateCounts() {
-                fetch("http://192.168.27.173:8000/count")
+                const appUrl = "{{ env('APP.URL') }}";
+                fetch(`${appUrl}/count`)
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById("ok-item").textContent =
-                            `OK: ${data.totalTypeOK} (${data.rsp}%)`;
+                            `OK: ${data.totalTypeOK} (RSP: ${Math.round(data.rsp)}%)`;
                         document.getElementById("buffing-item").textContent =
-                            `Buffing: ${data.totalTypeOkBuffing} (${data.fsp}%)`;
+                            `Buffing: ${data.totalTypeOkBuffing} (FSP: ${Math.round(data.fsp)}%)`;
                         document.getElementById("repaint-item").textContent =
-                            `Repaint: ${data.totalTypeRepaint} (${data.percentRepaint}%)`;
+                            `Repaint: ${data.totalTypeRepaint} (${Math.round(data.percentRepaint)}%)`;
                         document.getElementById("ot-item").textContent =
-                            `OT: ${data.totalTypeOutTotal} (${data.percentTypeOutTotal}%)`;
+                            `OT: ${data.totalTypeOutTotal} (${Math.round(data.percentTypeOutTotal)}%)`;
                     })
                     .catch(error => console.error("Error fetching count data:", error));
             }
