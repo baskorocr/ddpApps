@@ -248,10 +248,13 @@
 
 
             function fetchData() {
-                const countPartUrl = "{{ route('count-parts') }}";
+
+                const appUrl = "{{ env('APP.URL') }}";
+                const appPort = "{{ config('APP.ports') }}";
+
                 const url = selectedLineId ?
-                    `${countPartUrl}?lines=${selectedLineId}` :
-                    countPartUrl;
+                    `${appUrl}/api/countPart?line=${selectedLineId}` :
+                    `${appUrl}/api/countPart`;
 
                 console.log(url);
 

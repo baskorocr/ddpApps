@@ -31,6 +31,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
@@ -58,7 +59,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL'),
-
+    'ports' => env('PORTS', 8000),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
