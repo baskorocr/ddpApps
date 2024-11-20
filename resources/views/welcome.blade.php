@@ -248,9 +248,10 @@
 
 
             function fetchData() {
+                const countPartUrl = "{{ route('count-parts') }}";
                 const url = selectedLineId ?
-                    `http://127.0.0.1:8000/api/countPart?lines=${selectedLineId}` :
-                    "http://127.0.0.1:8000/api/countPart";
+                    `${countPartUrl}?lines=${selectedLineId}` :
+                    countPartUrl;
 
                 console.log(url);
 
