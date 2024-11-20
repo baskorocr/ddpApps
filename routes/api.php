@@ -21,3 +21,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('part-names/{typeId}', [ProsesController::class, 'getPartNames'])->name('part-names');
 Route::get('/item-defacts/{typeId}', [ProsesController::class, 'getItemDefactsByType']);
 Route::get('/item-defacts/{item}/{typeId}/{typePart}{namePart}', [ProsesController::class, 'getData']);
+Route::get('/countPart', [ProsesController::class, 'countPart'])->name('count-parts');

@@ -249,8 +249,8 @@
 
             function fetchData() {
                 const url = selectedLineId ?
-                    `http://127.0.0.1:8000/countPart?lines=${selectedLineId}` :
-                    "http://127.0.0.1:8000/countPart";
+                    `http://127.0.0.1:8000/api/countPart?lines=${selectedLineId}` :
+                    "http://127.0.0.1:8000/api/countPart";
 
                 console.log(url);
 
