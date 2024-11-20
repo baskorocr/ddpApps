@@ -497,7 +497,6 @@ class ProsesController extends Controller
         //     ->get();
 
         $lineId = $request->query('line');
-
         try {
             $result = DB::table('fix_proses as fp')
                 ->join('parts as p', 'fp.idPart', '=', 'p.id')
@@ -530,15 +529,16 @@ class ProsesController extends Controller
                     THEN MAX(CASE WHEN fp.typeDefact = "REPAINT" THEN fp.keterangan END) 
                     ELSE MAX(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN fp.keterangan END) 
                 END as Most_Frequent_Description'
-                    )
+                    ),
+                    DB::raw('MAX(fp.created_at) as created_at')
                 )
                 ->whereDate('fp.created_at', Carbon::today())
                 ->when($lineId, function ($query) use ($lineId) {
                     // Jika `lineId` ada, filter berdasarkan line
                     return $query->where('fp.idLine', $lineId);
                 })
-                ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item', 'fp.created_at')
-                ->orderByDesc('fp.created_at')
+                ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
+                ->orderByDesc('created_at')
                 ->orderBy('c.name')
                 ->orderBy('tp.type')
                 ->orderBy('cl.color')
@@ -548,13 +548,6 @@ class ProsesController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-
-
-
-
-
-
-
 
 
         return response()->json($result);
