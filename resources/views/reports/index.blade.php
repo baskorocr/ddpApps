@@ -11,11 +11,11 @@
             class="flex justify-between items-center gap-3 mb-4">
             <!-- Filter options (dropdowns) -->
             <div class="flex gap-3">
-                <select name="data_type" id="data_type" class="form-select w-auto">
+                <select name="data_type" id="data_type" class="form-select w-auto text-black  dark:text-black">
                     <option value="monthly" {{ request('data_type') == 'monthly' ? 'selected' : '' }}>Bulanan</option>
                     <option value="yearly" {{ request('data_type') == 'yearly' ? 'selected' : '' }}>Tahunan</option>
                 </select>
-                <select name="month" id="month" class="form-select w-auto"
+                <select name="month" id="month" class="form-select w-auto text-black  dark:text-black"
                     {{ request('data_type') == 'yearly' ? 'disabled' : '' }}>
                     @foreach (range(1, 12) as $month)
                         <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
@@ -23,7 +23,7 @@
                         </option>
                     @endforeach
                 </select>
-                <select name="year" id="year" class="form-select w-auto">
+                <select name="year" id="year" class="form-select w-auto text-black  dark:text-black">
                     @foreach (range(date('Y'), date('Y') - 10) as $year)
                         <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
                             {{ $year }}

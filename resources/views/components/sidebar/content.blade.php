@@ -58,7 +58,7 @@
 
         <x-sidebar.link title="Report Data" href="{{ route('reports.index') }}">
             <x-slot name="icon">
-                <i class="fa fa-university" aria-hidden="true"></i>
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
             </x-slot>
         </x-sidebar.link>
     @endif
