@@ -1,17 +1,18 @@
 <x-perfect-scrollbar as="nav" aria-label="main" class="flex flex-col flex-1 gap-4 px-3">
 
-    <x-sidebar.link title="Dashboard" href="{{ url(auth()->user()->role . '/dashboard') }}" :isActive="url(auth()->user()->role . '/dashboard')">
+    {{-- <x-sidebar.link title="Dashboard" href="{{ url(auth()->user()->role . '/dashboard') }}" :isActive="url(auth()->user()->role . '/dashboard')">
         <x-slot name="icon">
             <x-icons.dashboard class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
         </x-slot>
-    </x-sidebar.link>
-    <x-sidebar.dropdown title="Menu Management" :active="Str::startsWith(request()->route()->uri(), 'buttons')">
-        <x-slot name="icon">
-            <x-heroicon-o-view-grid class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
-        </x-slot>
+    </x-sidebar.link> --}}
+
+    @if (auth()->user()->role == 'admin')
+        <x-sidebar.dropdown title="Menu Management" :active="Str::startsWith(request()->route()->uri(), 'buttons')">
+            <x-slot name="icon">
+                <x-heroicon-o-view-grid class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+            </x-slot>
 
 
-        @if (auth()->user()->role == 'admin')
             <x-sidebar.sublink title="customers" href="{{ route('customers.index') }}" :active="request()->routeIs('customers.index')">
                 <x-slot name="icon">
                     <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
@@ -52,8 +53,15 @@
                     <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
                 </x-slot>
             </x-sidebar.sublink>
-        @endif
-    </x-sidebar.dropdown>
+
+        </x-sidebar.dropdown>
+
+        <x-sidebar.link title="Report Data" href="{{ route('reports.index') }}">
+            <x-slot name="icon">
+                <i class="fa fa-university" aria-hidden="true"></i>
+            </x-slot>
+        </x-sidebar.link>
+    @endif
 
 
 
