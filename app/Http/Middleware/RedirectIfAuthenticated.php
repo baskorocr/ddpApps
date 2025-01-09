@@ -20,11 +20,13 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+            // Jika pengguna belum login, tampilkan 404
+            if (!Auth::guard($guard)->check() && $request->routeIs('register')) {
+                abort(404);
             }
         }
 
+        // Jika pengguna sudah login, lanjutkan request
         return $next($request);
     }
 }
