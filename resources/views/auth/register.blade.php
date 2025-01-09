@@ -67,16 +67,6 @@
 
                     </select>
                 </div>
-                <div class="space-y-2">
-                    <x-form.label for="role" :value="__('Role')" />
-
-                    <select id="role"
-                        class="block text-black w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 focus:ring-blue-300"
-                        name="role" required>
-                        <option value="user">User</option>
-                        <option value="supervisor">Supervisor</option>
-                    </select>
-                </div>
 
 
                 <!-- Email Address -->
