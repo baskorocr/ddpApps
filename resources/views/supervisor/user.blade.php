@@ -47,7 +47,7 @@
                             <td class="px-6 py-4 flex space-x-4">
                                 <!-- Edit Button -->
                                 <!-- Delete Button -->
-                                <form action="{{ url('/supervisor/deleteUser/' . $u->npk) }}" method="POST"
+                                <form action="{{ url('/list/deleteUser/' . $u->npk) }}" method="POST"
                                     onsubmit="return confirm('Are you sure you want to delete this user?');">
                                     @csrf
                                     @method('DELETE')

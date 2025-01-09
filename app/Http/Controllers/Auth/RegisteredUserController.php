@@ -53,6 +53,6 @@ class RegisteredUserController extends Controller
 
 
 
-        return redirect()->route('user.index');
+        return redirect()->route('member.index');
     }
 }

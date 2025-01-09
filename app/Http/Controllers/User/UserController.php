@@ -118,6 +118,7 @@ class UserController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
 
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
@@ -142,7 +143,7 @@ class UserController extends Controller
         $user->delete();
 
         // Redirect kembali ke halaman daftar user dengan pesan sukses
-        return redirect()->route('user.index')->with('success', 'User deleted successfully.');
+        return redirect()->back();
     }
 
     public function home()

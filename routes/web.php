@@ -58,7 +58,7 @@ Route::group(['middleware' => ['role:admin'], 'prefix' => 'admin'], function () 
 });
 Route::group(['middleware' => ['role:supervisor'], 'prefix' => 'supervisor'], function () {
     Route::get('/dashboard', [SupervisorController::class, 'index'])->name('supervisor.dashboard');
-    Route::delete('/deleteUser/{id}', [UserController::class, 'deleteUser'])->name('supervisor.deleteUser');
+
 
 
 });
@@ -66,6 +66,7 @@ Route::group(['middleware' => ['role:supervisor'], 'prefix' => 'supervisor'], fu
 Route::group(['middleware' => ['role:supervisor,admin'], 'prefix' => 'list'], function () {
 
 
+    Route::delete('/deleteUser/{id}', [UserController::class, 'deleteUser'])->name('list.deleteUser');
     // Resource routes for user
     Route::resource('/member', UserController::class);
 });
