@@ -55,6 +55,11 @@
             </x-sidebar.sublink>
 
         </x-sidebar.dropdown>
+        <x-sidebar.link title="User" href="{{ route('member.index') }}">
+            <x-slot name="icon">
+                <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+            </x-slot>
+        </x-sidebar.link>
 
         <x-sidebar.link title="Report Data" href="{{ route('reports.index') }}">
             <x-slot name="icon">
@@ -66,7 +71,7 @@
 
 
     @if (auth()->user()->role == 'supervisor')
-        <x-sidebar.link title="User" href="{{ route('user.index') }}">
+        <x-sidebar.link title="User" href="{{ route('member.index') }}">
             <x-slot name="icon">
                 <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
             </x-slot>
