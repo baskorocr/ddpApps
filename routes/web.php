@@ -30,6 +30,8 @@ use App\Http\Controllers\reports;
 
 
 Route::get('/', [Controller::class, 'index'])->name('index');
+Route::get('/line/{id}', [Controller::class, 'line']);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

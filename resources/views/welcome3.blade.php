@@ -135,6 +135,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             let previousData = [];
+            let lineFinds = @json($lineFinds);
+
+            console.log(lineFinds.id);
 
             function updateTime() {
                 const timeElement = document.getElementById("current-time");
@@ -260,7 +263,8 @@
                 const appPort = "{{ config('APP.ports') }}";
 
                 const url =
-                    `${appUrl}/api/countPart`;
+                    `${appUrl}/api/countPart?line=${lineFinds.id}`;
+
 
                 console.log(url);
 
