@@ -21,7 +21,14 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
+        if (auth()->user()->role == 'users') {
+            abort(403);
+
+        }
+
         $depts = Dept::all();
+
+
         return view('auth.register', compact('depts'));
     }
 
@@ -34,7 +41,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'no' => ['required', 'string', 'numeric'],
+            'no' => ['string', 'numeric'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
