@@ -19,22 +19,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
                     <!-- Left Column -->
                     <div>
-                        {{-- <label for="part_type" class="block font-medium">Part Type</label>
-                        <select id="part_type" class="form-select w-full mt-2 text-black  dark:text-black"
-                            onchange="fetchPartNames()">
-                            <option value="">Select Part Type</option>
-                            @foreach ($types as $type)
-                                <option value="{{ $type->id }}">{{ $type->type }}</option>
-                            @endforeach
-                        </select> --}}
-
                         <label for="part_name" class="block font-medium mt-4">Part Name</label>
                         <select id="part_name" class="form-select w-full mt-2 text-black  dark:text-black">
                             <option value="">Select Part Name</option>
                         </select>
 
                         <label for="color" class="block font-medium mt-4">Color</label>
-                        <select id="color" class="form-select w-full mt-2 text-black  dark:text-black">
+                        <select id="color" class="form-select w-full mt-2 text-black dark:text-black">
                             <option value="">Select Color</option>
                             @foreach ($colors as $color)
                                 <option value="{{ $color->id }}">{{ $color->color }}</option>
@@ -44,19 +35,20 @@
 
                     <!-- Center Column -->
                     <div>
-                        <label for="inspector_name" class="block font-medium">Inspector Name</label>
+                        <label for="inspector_name" class="block font-medium mt-4">Inspector Name</label>
                         <input id="inspector_name" type="text" value="{{ auth()->user()->name }}"
-                            class="form-input w-full mt-2 text-black  dark:text-black" readonly>
+                            class="form-input w-full mt-2 text-black dark:text-black" readonly>
 
                         <label for="shift" class="block font-medium mt-4">Shift</label>
-                        <select id="shift" class="form-select w-full mt-2 text-black  dark:text-black">
+                        <select id="shift" class="form-select w-full mt-2 text-black dark:text-black">
                             <option value="">Select shift</option>
                             @foreach ($shifts as $shift)
                                 <option value="{{ $shift->id }}">{{ $shift->shift }}</option>
                             @endforeach
                         </select>
+
                         <label for="line" class="block font-medium mt-4">Line</label>
-                        <select id="line" class="form-select w-full mt-2 text-black  dark:text-black">
+                        <select id="line" class="form-select w-full mt-2 text-black dark:text-black">
                             <option value="">Select Line</option>
                             @foreach ($lines as $line)
                                 <option value="{{ $line->id }}">{{ $line->nameLine }}</option>
@@ -82,6 +74,7 @@
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
 
