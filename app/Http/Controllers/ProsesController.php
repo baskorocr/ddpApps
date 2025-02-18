@@ -61,6 +61,7 @@ class ProsesController extends Controller
         $lines = line::all();
         $colors = Colors::all();
         $shifts = shift::all();
+
         $group = itemDefects::select('item_defects.idTypeDefact', 'type_defects.type as nameType')
             ->selectRaw('GROUP_CONCAT(item_defects.id SEPARATOR ", ") AS idItemDefacts')
             ->selectRaw('GROUP_CONCAT(item_defects.itemDefact SEPARATOR ", ") AS itemDefacts')
@@ -83,6 +84,17 @@ class ProsesController extends Controller
 
         return view('user.q2', compact('types', 'lines', 'group', 'typeDefacts', 'colors', 'shifts', 'idItemDefactsArray', 'idItemDefactsArrayGroup1', 'idItemDefactsArrayGroup2'));
 
+    }
+
+    public function getpart2()
+    {
+        $parts = DB::table('temp_defacts')
+            ->join('parts', 'temp_defacts.idPart', '=', 'parts.id')
+            ->select('parts.id', 'parts.item')
+            ->groupBy('parts.id', 'parts.item') // Menambahkan 'parts.id' ke GROUP BY
+            ->get();
+
+        return response()->json($parts);
     }
 
     public function getItemDefactsByType($typeId)
@@ -212,7 +224,7 @@ class ProsesController extends Controller
 
         $validator = $request->validate([
 
-            'idPart' => 'required|integer',
+            'idPart' => 'required|string',
             'idColor' => 'required|string',
             'inspector_npk' => 'required|string',
 
@@ -240,7 +252,7 @@ class ProsesController extends Controller
 
         if ($request->input('nameTypeDefact') == 'ok') { //jika ok masuk table fix utk rsp
 
-            fixProses::create([
+            $p = fixProses::create([
 
                 'idPart' => $request->input('idPart'),
                 'idColor' => $request->input('idColor'),
@@ -255,6 +267,7 @@ class ProsesController extends Controller
 
 
             ]);
+
             $temp->delete();
 
         }

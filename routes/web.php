@@ -82,6 +82,10 @@ Route::group(['middleware' => ['role:users'], 'prefix' => 'users'], function () 
     Route::get('/dashboard', [UserController::class, 'home'])->name('users.dashboard');
     Route::get('/q1', [ProsesController::class, 'q1'])->name('users.q1');
     Route::get('/q2', [ProsesController::class, 'q2'])->name('users.q2');
+    Route::get('/getPart2', [ProsesController::class, 'getpart2'])->name('getpart2');
+
+
+
     Route::post('/storeReqQ1', [ProsesController::class, 'storeReqQ1']);
     Route::post('/storeReqQ2', [ProsesController::class, 'storeReqQ2']);
     Route::post('/getData', [ProsesController::class, 'getData']);

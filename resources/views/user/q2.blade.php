@@ -19,14 +19,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
                     <!-- Left Column -->
                     <div>
-                        <label for="part_type" class="block font-medium">Part Type</label>
+                        {{-- <label for="part_type" class="block font-medium">Part Type</label>
                         <select id="part_type" class="form-select w-full mt-2 text-black  dark:text-black"
                             onchange="fetchPartNames()">
                             <option value="">Select Part Type</option>
                             @foreach ($types as $type)
                                 <option value="{{ $type->id }}">{{ $type->type }}</option>
                             @endforeach
-                        </select>
+                        </select> --}}
 
                         <label for="part_name" class="block font-medium mt-4">Part Name</label>
                         <select id="part_name" class="form-select w-full mt-2 text-black  dark:text-black">
@@ -148,30 +148,33 @@
         </div>
     </div>
 
+
     <script>
         function fetchPartNames() {
-            const partTypeId = document.getElementById('part_type').value;
             const partNameSelect = document.getElementById('part_name');
-            const url = `{{ route('part-names', ':partTypeId') }}`.replace(':partTypeId', partTypeId);
+            const url = `{{ route('getpart2') }}`; // Ganti dengan route Laravel yang sesuai
+
             // Clear previous options
             partNameSelect.innerHTML = '<option value="">Select Part Name</option>';
 
-            if (partTypeId) {
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        data.forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item.id; // Assuming you have an 'id' for each item
-                            option.textContent = item.item; // Adjust based on your actual item structure
-                            partNameSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching part names:', error));
-            }
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id; // Assuming you have an 'id' for each item
+                        option.textContent = item.item; // Adjust based on your actual item structure
+                        partNameSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching part names:', error));
         }
+
+        // Fetch part names initially and set up an interval to refresh periodically
+        fetchPartNames();
+        setInterval(fetchPartNames, 30000); // Refresh every 5 seconds
     </script>
+
     <script>
         $(document).ready(function() {
             $('.defact-form').on('submit', function(event) {
