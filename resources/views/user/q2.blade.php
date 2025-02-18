@@ -209,7 +209,13 @@
                     method: 'POST',
                     data: combinedData,
                     success: function(response) {
-                        alert('info: ' + response.message);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: "Insert Data Successfully",
+                            timer: 3000, // Auto close after 3 seconds
+                            showConfirmButton: false // Hide the confirm button
+                        });
                         // Optionally, you can reset the form or perform other actions
                     },
                     error: function(xhr) {
@@ -218,7 +224,14 @@
                         for (const key in errors) {
                             errorMessage += errors[key].join('\n') + '\n';
                         }
-                        alert(errorMessage);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Input Failed!',
+                            text: "Make Sure All Fields Are Filled",
+                            timer: 3000, // Auto close after 3 seconds
+                            showConfirmButton: false // Hide the confirm button
+                        });
                     }
                 });
             });
