@@ -25,6 +25,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+
         $credentials = $request->only('identifier', 'password');
 
         // Determine if the identifier is email or NPK
@@ -43,14 +44,17 @@ class AuthenticatedSessionController extends Controller
         // Get authenticated user
         $user = auth()->user();
 
+
+
         // Redirect based on user role
-        if ($user->role == 'supervisor') {
+        if ($user->role == "supervisor") {
             return redirect()->route('supervisor.dashboard');
-        } elseif ($user->role == 'admin') {
+        } elseif ($user->role == "admin") {
             return redirect()->route('admin.dashboard');
-        } elseif ($user->role == 'users') {
+        } elseif ($user->role == "users") {
+
             return redirect()->route('users.dashboard');
-        } elseif ($user->role == 'client') {
+        } elseif ($user->role == "client") {
             return redirect()->route('client.dashboard');
         }
 

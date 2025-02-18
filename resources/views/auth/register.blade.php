@@ -50,7 +50,7 @@
                     <select id="role"
                         class="block text-black w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50 focus:ring-blue-300"
                         name="role" required>
-                        <option value="user">User</option>
+                        <option value="users">User</option>
                         <option value="admin">Admin</option>
                         <option value="supervisor">Supervisor</option>
                     </select>
