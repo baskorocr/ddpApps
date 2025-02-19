@@ -41,7 +41,7 @@
                         </x-slot>
 
                         <x-form.input withicon id="no" class="block w-full" type="number" name="no"
-                            required autofocus placeholder="{{ __('No Whatsapp') }}" />
+                            autofocus placeholder="{{ __('No Whatsapp') }}" />
                     </x-form.input-with-icon-wrapper>
                 </div>
                 <div class="space-y-2">
