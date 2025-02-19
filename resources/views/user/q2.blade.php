@@ -165,7 +165,6 @@
 
         // Fetch part names initially and set up an interval to refresh periodically
         fetchPartNames();
-        setInterval(fetchPartNames, 30000); // Refresh every 5 seconds
     </script>
 
     <script>
@@ -216,6 +215,7 @@
                             timer: 3000, // Auto close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
+                        fetchPartNames();
                         // Optionally, you can reset the form or perform other actions
                     },
                     error: function(xhr) {
@@ -232,6 +232,7 @@
                             timer: 3000, // Auto close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
+                        fetchPartNames();
                     }
                 });
             });
