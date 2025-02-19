@@ -248,7 +248,7 @@
                         document.getElementById("ok-item").textContent =
                             `OK: ${data.totalTypeOK} (RSP: ${Math.round(data.rsp)}%)`;
                         document.getElementById("buffing-item").textContent =
-                            `Buffing: ${data.totalTypeOkBuffing} (FSP: ${Math.round(data.fsp)}%)`;
+                            `Buffing OK: ${data.totalTypeOkBuffing} (FSP: ${Math.round(data.fsp)}%)`;
                         document.getElementById("repaint-item").textContent =
                             `Repaint: ${data.totalTypeRepaint} (${Math.round(data.percentRepaint)}%)`;
                         document.getElementById("ot-item").textContent =

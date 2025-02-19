@@ -386,12 +386,14 @@ class ProsesController extends Controller
     {
 
 
+
         $data = DB::table('fix_proses')
             ->select('typeDefact', DB::raw('count(*) as total'))
             ->whereIn('typeDefact', ['OK', 'REPAINT', 'OUT_TOTAL', 'OK_BUFFING'])
             ->whereDate('created_at', Carbon::today()) // Using Carbon to get today's date
             ->groupBy('typeDefact')
             ->pluck('total', 'typeDefact');
+
         // Ambil data dari pluck atau berikan nilai default 0 jika tidak ada
         $totalTypeOK = $data['OK'] ?? 0;
         $totalTypeRepaint = $data['REPAINT'] ?? 0;
