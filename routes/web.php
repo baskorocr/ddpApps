@@ -92,7 +92,8 @@ Route::group(['middleware' => ['role:users'], 'prefix' => 'users'], function () 
 
 });
 
-Route::get('/count', [ProsesController::class, 'countShift']);
+Route::get('/count1', [ProsesController::class, 'countShift1']);
+Route::get('/count2', [ProsesController::class, 'countShift2']);
 
 
 // // useless routes

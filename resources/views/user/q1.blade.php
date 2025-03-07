@@ -271,17 +271,18 @@
             function updateCounts() {
                 const appUrl = "{{ env('APP.URL') }}";
                 const appPort = "{{ config('APP.ports') }}";
-                fetch(`${appUrl}/count`)
+                fetch(`${appUrl}/count1`)
                     .then(response => response.json())
                     .then(data => {
+                       
                         document.getElementById("ok-item").textContent =
-                            `OK: ${data.totalTypeOK} (RSP: ${Math.round(data.rsp)}%)`;
+                            `OK: ${data.ok}`;
                         document.getElementById("buffing-item").textContent =
-                            `Buffing OK: ${data.totalTypeOkBuffing} (FSP: ${Math.round(data.fsp)}%)`;
+                            `Buffing: ${data.BUFFING}`;
                         document.getElementById("repaint-item").textContent =
-                            `Repaint: ${data.totalTypeRepaint} (${Math.round(data.percentRepaint)}%)`;
+                            `Repaint: ${data.REPAINT}`;
                         document.getElementById("ot-item").textContent =
-                            `OT: ${data.totalTypeOutTotal} (${Math.round(data.percentTypeOutTotal)}%)`;
+                            `OT: ${data.OUT_TOTAL}`;
                     })
                     .catch(error => console.error("Error fetching count data:", error));
             }

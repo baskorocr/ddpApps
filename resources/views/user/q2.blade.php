@@ -64,7 +64,7 @@
                     <div>
                         <h2 class="text-lg font-semibold mb-4">Data Summary</h2>
                         <ul class="list-disc list-inside space-y-1">
-                            <li id="ok-item">OK: 0 (0%)</li>
+                           
                             <li id="buffing-item">Buffing: 0 (0%)</li>
                             <li id="repaint-item">Repaint: 0 (0%)</li>
                             <li id="ot-item">OT: 0 (0%)</li>
@@ -309,17 +309,16 @@
         document.addEventListener("DOMContentLoaded", () => {
             function updateCounts() {
                 const appUrl = "{{ env('APP.URL') }}";
-                fetch(`${appUrl}/count`)
+                fetch(`${appUrl}/count2`)
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById("ok-item").textContent =
-                            `OK: ${data.totalTypeOK} (RSP: ${Math.round(data.rsp)}%)`;
+                  
                         document.getElementById("buffing-item").textContent =
-                            `Buffing OK: ${data.totalTypeOkBuffing} (FSP: ${Math.round(data.fsp)}%)`;
+                            `Buffing OK: ${data.OK_BUFFING} `;
                         document.getElementById("repaint-item").textContent =
-                            `Repaint: ${data.totalTypeRepaint} (${Math.round(data.percentRepaint)}%)`;
+                            `Repaint: ${data.REPAINT} `;
                         document.getElementById("ot-item").textContent =
-                            `OT: ${data.totalTypeOutTotal} (${Math.round(data.percentTypeOutTotal)}%)`;
+                            `OT: ${data.OUT_TOTAL}`;
                     })
                     .catch(error => console.error("Error fetching count data:", error));
             }
