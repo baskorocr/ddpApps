@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use App\Models\Q1;
+use App\Models\Q2;
 
 class ProsesController extends Controller
 {
@@ -159,6 +161,22 @@ class ProsesController extends Controller
 
             ]);
 
+           $P =  Q1::create([
+
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
+                'idNPK' => $request->input('inspector_npk'),
+                'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact'),
+                'role' => 'Q1',
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s')
+
+
+            ]);
+
+
         }
         // elseif($request->input('idTypeDefact')){ //jika out total masuk ke table
 
@@ -176,6 +194,20 @@ class ProsesController extends Controller
                 'idLine' => $request->input('line'),
                 'typeDefact' => $request->input('nameTypeDefact'),
                 'keterangan' => $request->input('itemDefact'),
+                'role' => 'Q1',
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s')
+
+
+            ]);
+            Q1::create([
+
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
+                'idNPK' => $request->input('inspector_npk'),
+                'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact'),
                 'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
@@ -200,6 +232,17 @@ class ProsesController extends Controller
 
 
             ]);
+            Q1::create([
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
+                'idNPK' => $request->input('inspector_npk'),
+                'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact'),
+                'role' => 'Q1',
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s')
+            ]);
 
         } else {
 
@@ -213,6 +256,20 @@ class ProsesController extends Controller
                 'idLine' => $request->input('line'),
                 'typeDefact' => $request->input('nameTypeDefact'),
                 'keterangan' => $request->input('itemDefact'),
+                'role' => 'Q1',
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s')
+
+
+            ]);
+            Q1::create([
+
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
+                'idNPK' => $request->input('inspector_npk'),
+                'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact'),
                 'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
@@ -244,8 +301,7 @@ class ProsesController extends Controller
             // 'line' => 'required|string', // Ensure line is validated
         ]);
 
-      
-        dd($validator);
+     
 
 
      
@@ -280,6 +336,20 @@ class ProsesController extends Controller
 
 
             ]);
+            Q2::create([
+
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
+                'idNPK' => $request->input('inspector_npk'),
+                'idLine' => $request->input('line'),
+                'typeDefact' => "OK_BUFFING",
+                'role' => 'Q1',
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s')
+
+
+            ]);
 
             $temp->delete();
 
@@ -299,6 +369,20 @@ class ProsesController extends Controller
                 'idLine' => $request->input('line'),
                 'typeDefact' => $request->input('nameTypeDefact'),
                 'keterangan' => $request->input('itemDefact'),
+                'role' => 'Q1',
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s')
+
+
+            ]);
+            Q2::create([
+
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
+                'idNPK' => $request->input('inspector_npk'),
+                'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact') ,
                 'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
@@ -326,6 +410,21 @@ class ProsesController extends Controller
 
 
             ]);
+            Q2::create([
+
+                'idPart' => $request->input('idPart'),
+                'idColor' => $request->input('idColor'),
+                'idShift' => $request->input('idShift'),
+                'idNPK' => $request->input('inspector_npk'),
+                'idLine' => $request->input('line'),
+                'typeDefact' => $request->input('nameTypeDefact') ,
+                'role' => 'Q1',
+                'created_at' => now()->format('Y-m-d H:i:s'),
+                'updated_at' => now()->format('Y-m-d H:i:s')
+
+
+            ]);
+
             $temp->delete();
 
         }
@@ -444,58 +543,7 @@ class ProsesController extends Controller
     {
 
 
-        $lineId = $request->query('line');
-        try {
-            $result = DB::table('fix_proses as fp')
-                ->join('parts as p', 'fp.idPart', '=', 'p.id')
-                ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-                ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-                ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-                ->select(
-                    'c.name as Customer_Name',
-                    'tp.type as Part_Type',
-                    'cl.color as Color',
-                    'p.item as Item',
-                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-                    DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-                     COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
-                     COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
-                     COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
-                    DB::raw('
-                CASE 
-                    WHEN COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) > COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END)
-                    THEN "Repaint Dominates"
-                    ELSE "Out Total Dominates"
-                END as Dominant_Type'
-                    ),
-                    DB::raw('
-                CASE 
-                    WHEN COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) > COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) 
-                    THEN MAX(CASE WHEN fp.typeDefact = "REPAINT" THEN fp.keterangan END) 
-                    ELSE MAX(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN fp.keterangan END) 
-                END as Most_Frequent_Description'
-                    ),
-                    DB::raw('MAX(fp.created_at) as created_at')
-                )
-                ->whereDate('fp.created_at', Carbon::today())
-                ->when($lineId, function ($query) use ($lineId) {
-                    // Jika `lineId` ada, filter berdasarkan line
-                    return $query->where('fp.idLine', $lineId);
-                })
-                ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
-                ->orderByDesc('created_at')
-                ->orderBy('c.name')
-                ->orderBy('tp.type')
-                ->orderBy('cl.color')
-                ->orderBy('p.item')
-                ->get();
-
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
+       
 
 
         return response()->json($result);
