@@ -242,7 +242,7 @@
                             icon: 'success',
                             title: 'Success!',
                             text: "Insert Data Successfully",
-                            timer: 3000, // Auto close after 3 seconds
+                            timer: 500, // Auto close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
                         // Optionally, you can reset the form or perform other actions
@@ -258,7 +258,7 @@
                             icon: 'error',
                             title: 'Input Failed!',
                             text: "Make Sure All Fields Are Filled",
-                            timer: 3000, // Auto close after 3 seconds
+                            timer: 500, // Auto close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
                     }

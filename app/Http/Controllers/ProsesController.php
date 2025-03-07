@@ -74,6 +74,7 @@ class ProsesController extends Controller
         $idItemDefactsArray = explode(', ', $group[0]->idItemDefacts);
         $idItemDefactsArrayGroup1 = explode(', ', $group[1]->idItemDefacts);
         $idItemDefactsArrayGroup2 = explode(', ', $group[2]->idItemDefacts);
+        $idItemDefactsArrayGroup3 = explode(', ', $group[3]);
 
 
 
@@ -82,20 +83,28 @@ class ProsesController extends Controller
             $item->itemDefacts = explode(', ', $item->itemDefacts);
         }
 
-        return view('user.q2', compact('types', 'lines', 'group', 'typeDefacts', 'colors', 'shifts', 'idItemDefactsArray', 'idItemDefactsArrayGroup1', 'idItemDefactsArrayGroup2'));
+        return view('user.q2', compact('types', 'lines', 'group', 'typeDefacts', 'colors', 'shifts', 'idItemDefactsArray', 'idItemDefactsArrayGroup1', 'idItemDefactsArrayGroup2', 'idItemDefactsArrayGroup3'));
 
     }
 
     public function getpart2()
     {
         $parts = DB::table('temp_defacts')
-            ->join('parts', 'temp_defacts.idPart', '=', 'parts.id')
-            ->select('parts.id', 'parts.item')
-            ->groupBy('parts.id', 'parts.item') // Menambahkan 'parts.id' ke GROUP BY
-            ->get();
-
+        ->join('parts', 'temp_defacts.idPart', '=', 'parts.id')
+        ->join('colors', 'temp_defacts.idColor', '=', 'colors.id')
+        ->select(
+            'parts.id as part_id', // Aliasing id part
+            'parts.item',
+            'colors.id as color_id', // Aliasing id color
+            'colors.color',
+            'temp_defacts.idColor'
+        )
+        ->groupBy('parts.id', 'parts.item', 'colors.id', 'colors.color', 'temp_defacts.idColor')
+        ->get();
+     ;
         return response()->json($parts);
     }
+    
 
     public function getItemDefactsByType($typeId)
     {
@@ -235,19 +244,23 @@ class ProsesController extends Controller
             // 'line' => 'required|string', // Ensure line is validated
         ]);
 
+      
+        dd($validator);
 
 
-
-
+     
 
         $temp = tempDefact::where('idPart', $validator['idPart'])
             ->where('idColor', $validator['idColor'])
             ->first();
+     
+     
 
 
 
         if (is_null($temp)) { // Akan masuk ke kondisi ini jika $temp bernilai null
-            return response()->json(['message' => 'Table Proses Buffing is Null']);
+          
+            return response()->json(['message' => 'Table Proses Buffing is Null'],400);
         }
 
         if ($request->input('nameTypeDefact') == 'ok') { //jika ok masuk table fix utk rsp
@@ -430,86 +443,6 @@ class ProsesController extends Controller
     public function countPart(Request $request)
     {
 
-
-
-        // $result = DB::table('fix_proses as fp')
-        //     ->join('parts as p', 'fp.idPart', '=', 'p.id')
-        //     ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-        //     ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-        //     ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-        //     ->select(
-        //         'c.name as Customer_Name',
-        //         'tp.type as Part_Type',
-        //         'cl.color as Color',
-        //         'p.item as Item',
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-        //          COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
-        //          COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
-        //          COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
-        //         DB::raw('
-        //     (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
-        //     (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END)) ) * 100 as rsp'),
-        //         DB::raw('
-        //     ((COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
-        //     (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END)) ) * 100) + 
-        //     ((COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) / 
-        //     (COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
-        //      COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END)) ) * 100) as fsp')
-        //     )
-        //     ->whereDate('fp.created_at', '=', \Carbon\Carbon::today()->toDateString()) // Filter by today's date
-        //     ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
-        //     ->orderByDesc('fp.created_at')  // Order by the most recent creation date
-        //     ->orderBy('c.name')              // Secondary sort by customer name
-        //     ->orderBy('tp.type')             // Tertiary sort by part type
-        //     ->orderBy('cl.color')            // Quaternary sort by color
-        //     ->orderBy('p.item')              // Final sort by part item
-        //     ->get();
-
-        // $result = DB::table('fix_proses as fp')
-        //     ->join('parts as p', 'fp.idPart', '=', 'p.id')
-        //     ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-        //     ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-        //     ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-        //     ->select(
-        //         'c.name as Customer_Name',
-        //         'tp.type as Part_Type',
-        //         'cl.color as Color',
-        //         'p.item as Item',
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-        //         DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-        //          COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) + 
-        //          COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) + 
-        //          COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as TotalAll'),
-        //         DB::raw('
-        //     CASE 
-        //         WHEN COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) > COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) 
-        //         THEN MAX(CASE WHEN fp.typeDefact = "REPAINT" THEN fp.keterangan END) 
-        //         ELSE MAX(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN fp.keterangan END) 
-        //     END as Most_Frequent_Description')
-        //     )
-        //     ->whereDate('fp.created_at', '=', \Carbon\Carbon::today()->toDateString()) // Filter by today's date
-        //     ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
-        //     ->orderByDesc('fp.created_at')  // Order by the most recent creation date
-        //     ->orderBy('c.name')              // Secondary sort by customer name
-        //     ->orderBy('tp.type')             // Tertiary sort by part type
-        //     ->orderBy('cl.color')            // Quaternary sort by color
-        //     ->orderBy('p.item')              // Final sort by part item
-        //     ->get();
 
         $lineId = $request->query('line');
         try {

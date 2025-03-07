@@ -31,6 +31,10 @@
                                 <option value="{{ $color->id }}">{{ $color->color }}</option>
                             @endforeach
                         </select>
+                        <button id="refresh"
+                                class="mt-5 bg-green-500 w-200 text-white text-center py-2 px-4 rounded font-medium hover:bg-green-600">
+                                refresh
+                            </button>
                     </div>
 
                     <!-- Center Column -->
@@ -93,6 +97,22 @@
                             OK
                         </button>
                     </form>
+                    <h2 class="text-lg font-semibold mb-4">Touch up</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
+                        @foreach ($group[3]->itemDefacts as $index => $defact)
+                            <form class="defact-form">
+                                @csrf
+                                <input type="hidden" name="idItemDefact"
+                                    value="{{ $idItemDefactsArrayGroup3[$index] }}">
+                                <input type="hidden" name="nameTypeDefact" value="{{ $group[3]->nameType }}">
+                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
+                                <x-button type="submit"
+                                    class="bg-lime-500 text-white hover:bg-lime-600 py-5 w-full text-base font-semibold">
+                                    {{ $defact }}
+                                </x-button>
+                            </form>
+                        @endforeach
+                    </div>
 
                 </div>
 
@@ -143,29 +163,70 @@
 
 
     <script>
-        function fetchPartNames() {
-            const partNameSelect = document.getElementById('part_name');
-            const url = `{{ route('getpart2') }}`; // Ganti dengan route Laravel yang sesuai
+    document.addEventListener("DOMContentLoaded", function () {
+        const partNameSelect = document.getElementById("part_name");
+        const colorSelect = document.getElementById("color");
+        const url = `{{ route('getpart2') }}`; // Sesuaikan dengan route Laravel Anda
 
-            // Clear previous options
+        // Function untuk mengambil data part
+        function fetchPartNames() {
             partNameSelect.innerHTML = '<option value="">Select Part Name</option>';
 
             fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.id; // Assuming you have an 'id' for each item
-                        option.textContent = item.item; // Adjust based on your actual item structure
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data); // Debugging untuk melihat response
+
+                    data.forEach((item) => {
+                        const option = document.createElement("option");
+                        option.value = item.part_id; 
+                        option.textContent = item.item;
+                        option.dataset.colorId = item.idColor; // Simpan idColor sebagai data attribute
+                        option.dataset.colorName = item.color; // Simpan nama warna
+
                         partNameSelect.appendChild(option);
                     });
                 })
-                .catch(error => console.error('Error fetching part names:', error));
+                .catch((error) =>
+                    console.error("Error fetching part names:", error)
+                );
         }
+        const refreshButton = document.getElementById("refresh");
 
-        // Fetch part names initially and set up an interval to refresh periodically
+        // Event listener untuk tombol refresh
+        document.addEventListener("click", function (event) {
+            if (event.target.id === "refresh") {
+                console.log("Refresh button clicked!");
+                fetchPartNames(); // Panggil fungsi untuk refresh data
+            }
+        });
+
+        // Event listener ketika part dipilih
+        partNameSelect.addEventListener("change", function () {
+            const selectedOption =
+                partNameSelect.options[partNameSelect.selectedIndex];
+            const selectedColorId = selectedOption.dataset.colorId;
+            const selectedColorName = selectedOption.dataset.colorName;
+
+            // Hapus semua opsi kecuali default
+            colorSelect.innerHTML =
+                '<option value="">Select Color</option>'; // Reset opsi warna
+
+            if (selectedColorId) {
+                const option = document.createElement("option");
+                option.value = selectedColorId;
+                option.textContent = selectedColorName;
+                colorSelect.appendChild(option);
+
+                colorSelect.value = selectedColorId; // Pilih otomatis warna yang sesuai
+            }
+        });
+
+        // Panggil fungsi untuk memuat daftar part saat halaman dimuat
         fetchPartNames();
-    </script>
+    });
+</script>
+
 
     <script>
         $(document).ready(function() {
@@ -186,6 +247,8 @@
                     date: $('#date').val(),
 
                 };
+
+                console.log(additionalData);
 
                 // Combine form data with additional data
                 const combinedData = {};
@@ -212,26 +275,30 @@
                             icon: 'success',
                             title: 'Success!',
                             text: "Insert Data Successfully",
-                            timer: 3000, // Auto close after 3 seconds
+                            timer: 500, // Auto close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
                         fetchPartNames();
                         // Optionally, you can reset the form or perform other actions
                     },
                     error: function(xhr) {
-                        const errors = xhr.responseJSON.errors;
-                        let errorMessage = 'Errors occurred:\n';
-                        for (const key in errors) {
-                            errorMessage += errors[key].join('\n') + '\n';
-                        }
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Input Failed!',
-                            text: "Make Sure All Fields Are Filled",
-                            timer: 3000, // Auto close after 3 seconds
-                            showConfirmButton: false // Hide the confirm button
-                        });
+                        if (xhr.status === 400) { // ✅ Menangani jika $temp null
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed!',
+                text: xhr.responseJSON.message,
+                timer: 500,
+                showConfirmButton: false
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Input Failed!',
+                text: "Make Sure All Fields Are Filled",
+                timer: 500,
+                showConfirmButton: false
+            });
+        }
                         fetchPartNames();
                     }
                 });
