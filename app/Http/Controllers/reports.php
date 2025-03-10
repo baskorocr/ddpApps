@@ -92,6 +92,7 @@ class reports extends Controller
 
     private function exportYearlyData($year)
     {
+       
         $sheets = [];
 
         // Loop melalui semua bulan untuk mengumpulkan data bulanan
@@ -108,6 +109,7 @@ class reports extends Controller
                         'Color' => $item->Color,
                         'Item' => $item->Item,
                         'Total_OK_Count' => $item->Total_OK_Count,
+                        'Total_Buffing' => $item->Total_Count_Buffing,
                         'Total_OK_Buffing_Count' => $item->Total_OK_Buffing_Count,
                         'Total_Count_OutTotal' => $item->Total_Count_OutTotal,
                         'Total_Count_Repaint' => $item->Total_Count_Repaint,
@@ -128,11 +130,13 @@ class reports extends Controller
 
     private function fetchData($month, $year, $type)
     {
+       
         $query = DB::table('fix_proses as fp')
             ->join('parts as p', 'fp.idPart', '=', 'p.id')
             ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
             ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
             ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
+            ->leftJoin('temp_defacts as buffing', 'fp.idPart', '=', 'buffing.idPart')
             ->select(
                 $type === 'monthly'
                 ? DB::raw('DATE_FORMAT(fp.created_at, "%Y-%m") as Date')  // Format tanggal 'YYYY-MM' untuk bulanan
@@ -145,6 +149,7 @@ class reports extends Controller
                 DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
                 DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
                 DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
+                DB::raw('COUNT(CASE WHEN buffing.typeDefact = "BUFFING" THEN 1 END) AS Total_Count_Buffing'),
                 DB::raw('COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END) as TotalAll'),
                 DB::raw('(COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
                       COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END)) * 100 as rsp'),
@@ -153,6 +158,7 @@ class reports extends Controller
                       COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END)) * 100 as fsp')
             )
             ->whereYear('fp.created_at', $year);
+ 
 
         if ($type === 'daily') {
             // Data harian berdasarkan bulan

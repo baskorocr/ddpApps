@@ -1,4 +1,17 @@
 <x-guest-layout>
+<style>
+    .signal {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    .green { background-color: green; }
+    .yellow { background-color: yellow; }
+    .orange { background-color: orange; }
+    .red { background-color: red; }
+</style>
     <x-slot name="header">
 
 
@@ -72,6 +85,9 @@
                             <li id="buffing-item">Buffing: 0 (0%)</li>
                             <li id="repaint-item">Repaint: 0 (0%)</li>
                             <li id="ot-item">OT: 0 (0%)</li>
+                            <li id="signal">
+        <span class="signal"></span> Signal Strength: <span id="signal-strength">-</span>
+    </li>
                         </ul>
                         <form method="POST" action="{{ route('logout') }}" class="mt-6">
                             @csrf
@@ -283,6 +299,21 @@
                             `Repaint: ${data.REPAINT}`;
                         document.getElementById("ot-item").textContent =
                             `OT: ${data.OUT_TOTAL}`;
+                            const signalStrength = data.Signal;
+                document.getElementById("signal-strength").textContent = signalStrength.toFixed(2);
+
+                let signal = document.querySelector(".signal");
+                signal.classList.remove("green", "yellow", "orange", "red");
+
+                if (signalStrength >= 0.8) {
+                    signal.classList.add("green");
+                } else if (signalStrength >= 0.5) {
+                    signal.classList.add("yellow");
+                } else if (signalStrength >= 0.3) {
+                    signal.classList.add("orange");
+                } else {
+                    signal.classList.add("red");
+                }
                     })
                     .catch(error => console.error("Error fetching count data:", error));
             }

@@ -96,6 +96,7 @@ Route::get('/count1', [ProsesController::class, 'countShift1']);
 Route::get('/count2', [ProsesController::class, 'countShift2']);
 
 
+
 // // useless routes
 // // Just to demo sidebar dropdown links active states.
 // Route::get('/buttons/text', function () {

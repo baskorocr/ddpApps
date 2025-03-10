@@ -58,4 +58,8 @@ class LineController extends Controller
         $line->delete();
         return redirect()->route('lines.index');
     }
+
+    
+
+
 }

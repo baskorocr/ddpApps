@@ -497,6 +497,8 @@ class ProsesController extends Controller
     public function countShift1()
     {
 
+        $host = "8.8.8.8"; // Ganti dengan IP/host tujuan
+        $pingResult = [];
 
 
         $typeDefactCounts = DB::table('q1_s')
@@ -507,11 +509,30 @@ class ProsesController extends Controller
     ->pluck('count', 'typeDefact')
     ->toArray();
 
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        // Windows command
+        exec("ping -n 1 $host", $pingResult);
+    } else {
+        // Linux/Mac command
+        exec("ping -c 1 $host", $pingResult);
+    }
+    
+    // Ekstrak waktu respons (latency) dari hasil ping
+    $latency = -1;
+    foreach ($pingResult as $line) {
+        if (preg_match('/time=([\d.]+) ms/', $line, $matches)) {
+            $latency = floatval($matches[1]);
+            break;
+        }
+    }
+
+    
     $typ = [
         'ok' => $typeDefactCounts['ok'] ?? 0,
         'BUFFING' => $typeDefactCounts['BUFFING'] ?? 0,
         'REPAINT' => $typeDefactCounts['REPAINT'] ?? 0,
         'OUT_TOTAL' => $typeDefactCounts['OUT_TOTAL'] ?? 0,
+        'Signal' => $latency??0,
     ];
        
 
