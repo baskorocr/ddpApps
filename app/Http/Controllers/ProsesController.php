@@ -132,6 +132,7 @@ class ProsesController extends Controller
             'idPart' => 'required|integer',
             'idColor' => 'required|string',
             'inspector_npk' => 'required|string',
+        
 
             'idShift' => 'required|integer',
             'nameTypeDefact' => 'required|string',
@@ -208,6 +209,7 @@ class ProsesController extends Controller
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
                 'typeDefact' => $request->input('nameTypeDefact'),
+                 
                 'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
@@ -217,6 +219,7 @@ class ProsesController extends Controller
 
         } elseif ($request->input('nameTypeDefact') == 'BUFFING') {
 
+       
 
 
             tempDefact::create([
@@ -226,6 +229,7 @@ class ProsesController extends Controller
                 'idNPK' => $request->input('inspector_npk'),
                 'idLine' => $request->input('line'),
                 'typeDefact' => $request->input('nameTypeDefact'),
+                'keterangan' => $request->input('itemDefact'),
                 'role' => 'Q1',
                 'created_at' => now()->format('Y-m-d H:i:s'),
                 'updated_at' => now()->format('Y-m-d H:i:s')
@@ -246,6 +250,7 @@ class ProsesController extends Controller
 
         } else {
 
+           
 
             fixProses::create([
 
@@ -262,6 +267,7 @@ class ProsesController extends Controller
 
 
             ]);
+
             Q1::create([
 
                 'idPart' => $request->input('idPart'),

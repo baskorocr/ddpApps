@@ -53,7 +53,6 @@
                         <th class="px-4 py-2">{{ __('Item') }}</th>
                         <th class="px-4 py-2">{{ __('Total OK') }}</th>
                         <th class="px-4 py-2">{{ __('Total OK Buffing') }}</th>
-                        <th class="px-4 py-2">{{ __('Total Buffing') }}</th>
                         <th class="px-4 py-2">{{ __('Total Out Total') }}</th>
                         <th class="px-4 py-2">{{ __('Total Repaint') }}</th>
                         <th class="px-4 py-2">{{ __('Total All') }}</th>
@@ -70,7 +69,6 @@
                             <td class="px-4 py-2">{{ $result->Item }}</td>
                             <td class="px-4 py-2">{{ $result->Total_OK_Count }}</td>
                             <td class="px-4 py-2">{{ $result->Total_OK_Buffing_Count }}</td>
-                            <td class="px-4 py-2">{{ $result->Total_Count_Buffing}}</td>
                             <td class="px-4 py-2">{{ $result->Total_Count_OutTotal }}</td>
                             <td class="px-4 py-2">{{ $result->Total_Count_Repaint }}</td>
                             <td class="px-4 py-2">{{ $result->TotalAll }}</td>

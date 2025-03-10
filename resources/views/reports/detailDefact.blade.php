@@ -7,7 +7,7 @@
 
     <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
         <!-- Filter Form -->
-        <form id="filter-form" method="GET" action="{{ route('reports.index') }}"
+        <form id="filter-form" method="GET" action="{{ route('defact.report') }}"
             class="flex justify-between items-center gap-3 mb-4">
             <!-- Filter options (dropdowns) -->
             <div class="flex gap-3">
@@ -34,7 +34,7 @@
 
             <!-- Download Button (aligned to the right) -->
             <div class="ml-auto">
-                <a href="{{ route('reports.export', ['data_type' => request('data_type'), 'month' => request('month'), 'year' => request('year')]) }}"
+                <a href="{{ route('reports.defact', ['data_type' => request('data_type'), 'month' => request('month'), 'year' => request('year')]) }}"
                     class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
                     {{ __('Download Excel') }}
                 </a>
@@ -51,14 +51,14 @@
                         <th class="px-4 py-2">{{ __('Part Type') }}</th>
                         <th class="px-4 py-2">{{ __('Color') }}</th>
                         <th class="px-4 py-2">{{ __('Item') }}</th>
+                        <th class="px-4 py-2">{{ __('Keterangan') }}</th>
                         <th class="px-4 py-2">{{ __('Total OK') }}</th>
                         <th class="px-4 py-2">{{ __('Total OK Buffing') }}</th>
                         <th class="px-4 py-2">{{ __('Total Buffing') }}</th>
                         <th class="px-4 py-2">{{ __('Total Out Total') }}</th>
                         <th class="px-4 py-2">{{ __('Total Repaint') }}</th>
                         <th class="px-4 py-2">{{ __('Total All') }}</th>
-                        <th class="px-4 py-2">{{ __('RSP') }}</th>
-                        <th class="px-4 py-2">{{ __('FSP') }}</th>
+                    
                     </tr>
                 </thead>
                 <tbody>
@@ -68,15 +68,14 @@
                             <td class="px-4 py-2">{{ $result->Part_Type }}</td>
                             <td class="px-4 py-2">{{ $result->Color }}</td>
                             <td class="px-4 py-2">{{ $result->Item }}</td>
-                            <td class="px-4 py-2">{{ $result->Total_OK_Count }}</td>
-                            <td class="px-4 py-2">{{ $result->Total_OK_Buffing_Count }}</td>
-                            <td class="px-4 py-2">{{ $result->Total_Count_Buffing}}</td>
-                            <td class="px-4 py-2">{{ $result->Total_Count_OutTotal }}</td>
-                            <td class="px-4 py-2">{{ $result->Total_Count_Repaint }}</td>
-                            <td class="px-4 py-2">{{ $result->TotalAll }}</td>
-                            <td class="px-4 py-2">{{ number_format($result->rsp, 2) }}%</td>
-                            <td class="px-4 py-2">{{ number_format($result->fsp, 2) }}%</td>
-                        </tr>
+                            <td class="px-4 py-2">{{ $result->keterangan }}</td>
+                            <td class="px-4 py-2">{{ $result->Total_OK_Count ?? 0 }}</td>
+                            <td class="px-4 py-2">{{ $result->Total_OK_Buffing_Count ?? 0}}</td>
+                            <td class="px-4 py-2">{{ $result->Total_Count_Buffing ?? 0}}</td>
+                            <td class="px-4 py-2">{{ $result->Total_Count_OutTotal  ?? 0}}</td>
+                            <td class="px-4 py-2">{{ $result->Total_Count_Repaint ?? 0}}</td>
+                            <td class="px-4 py-2">{{ $result->TotalAll  ?? 0}}</td>
+                               </tr>
                     @endforeach
                 </tbody>
             </table>

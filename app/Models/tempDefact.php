@@ -19,6 +19,7 @@ class tempDefact extends Model
         "idLine",
         'idNPK',
         'role',
+        'keterangan',
          'created_at',
         'updated_at',
 

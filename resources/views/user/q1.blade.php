@@ -239,6 +239,7 @@
                 // Append serialized form data
                 formData.forEach(item => {
                     combinedData[item.name] = item.value;
+                    
                 });
 
                 // Append additional data

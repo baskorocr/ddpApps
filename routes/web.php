@@ -96,6 +96,7 @@ Route::get('/count2', [ProsesController::class, 'countShift2']);
 Route::get('/reports', [reports::class, 'filterData'])->name('reports.index');
 Route::get('/reportDefact', [reports::class, 'filterDefact'])->name('defact.report');
 Route::get('/reports/export', [reports::class, 'exportData'])->name('reports.export');
+Route::get('/reports/defact', [reports::class, 'exportData2'])->name('reports.defact');
 
 
 
