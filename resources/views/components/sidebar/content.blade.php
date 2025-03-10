@@ -55,17 +55,34 @@
             </x-sidebar.sublink>
 
         </x-sidebar.dropdown>
+
+        <x-sidebar.dropdown title="Data Report" :active="Str::startsWith(request()->route()->uri(), 'buttons')">
+    <x-slot name="icon">
+        <x-heroicon-o-view-grid class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+    </x-slot>
+
+    <x-sidebar.sublink title="FSP Data" href="{{ route('reports.index') }}" :active="request()->routeIs('reports.index')">
+        <x-slot name="icon">
+            <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+        </x-slot>
+    </x-sidebar.sublink>
+    <x-sidebar.sublink title="Detail Defact" href="{{ route('reports.index') }}" :active="request()->routeIs('reports.index')">
+        <x-slot name="icon">
+            <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+        </x-slot>
+    </x-sidebar.sublink>
+
+</x-sidebar.dropdown>
+
+
         <x-sidebar.link title="User" href="{{ route('member.index') }}">
             <x-slot name="icon">
                 <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
             </x-slot>
         </x-sidebar.link>
 
-        <x-sidebar.link title="Report Data" href="{{ route('reports.index') }}">
-            <x-slot name="icon">
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-            </x-slot>
-        </x-sidebar.link>
+        <!-- report -->
+        
     @endif
 
 

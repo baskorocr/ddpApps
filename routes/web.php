@@ -76,8 +76,7 @@ Route::group(['middleware' => ['role:supervisor,admin'], 'prefix' => 'list'], fu
 
 
 
-Route::get('/reports', [reports::class, 'filterData'])->name('reports.index');
-Route::get('/reports/export', [reports::class, 'exportData'])->name('reports.export');
+
 Route::group(['middleware' => ['role:users'], 'prefix' => 'users'], function () {
     Route::get('/dashboard', [UserController::class, 'home'])->name('users.dashboard');
     Route::get('/q1', [ProsesController::class, 'q1'])->name('users.q1');
@@ -94,6 +93,9 @@ Route::group(['middleware' => ['role:users'], 'prefix' => 'users'], function () 
 
 Route::get('/count1', [ProsesController::class, 'countShift1']);
 Route::get('/count2', [ProsesController::class, 'countShift2']);
+Route::get('/reports', [reports::class, 'filterData'])->name('reports.index');
+Route::get('/reportDefact', [reports::class, 'filterDefact'])->name('defact.report');
+Route::get('/reports/export', [reports::class, 'exportData'])->name('reports.export');
 
 
 

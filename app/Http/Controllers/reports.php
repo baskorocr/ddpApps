@@ -179,6 +179,19 @@ class reports extends Controller
         return $query->get()->toArray();
     }
 
+    public function filterDefact(Request $request){
+        $dataType = $request->input('data_type', 'monthly');  // Default is monthly
+        $month = $request->input('month', Carbon::now()->month);  // Default to current month
+        $year = $request->input('year', Carbon::now()->year);  // Default to current year
+
+        // Fetch the filtered data based on selected criteria
+        $results = $this->fetchData($month, $year, $dataType === 'yearly' ? 'yearly' : 'daily');
+
+        // Return the view with the results
+        return view('reports.detailDefact', compact('results'));
+
+    }
+
 }
 
 

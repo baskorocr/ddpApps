@@ -547,6 +547,8 @@ class ProsesController extends Controller
     {
 
 
+        $host = "8.8.8.8"; // Ganti dengan IP/host tujuan
+        $pingResult = [];
 
         $typeDefactCounts = DB::table('q2_s')
         ->whereIn('typeDefact', ['OK_BUFFING', 'REPAINT', 'OUT_TOTAL'])->where('idNPK', auth()->user()->npk)->whereDate('created_at', now())
@@ -555,11 +557,29 @@ class ProsesController extends Controller
         ->get()
         ->pluck('count', 'typeDefact')
         ->toArray();
+
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            // Windows command
+            exec("ping -n 1 $host", $pingResult);
+        } else {
+            // Linux/Mac command
+            exec("ping -c 1 $host", $pingResult);
+        }
+        
+        // Ekstrak waktu respons (latency) dari hasil ping
+        $latency = -1;
+        foreach ($pingResult as $line) {
+            if (preg_match('/time=([\d.]+) ms/', $line, $matches)) {
+                $latency = floatval($matches[1]);
+                break;
+            }
+        }
         $typ = [
             'OK_BUFFING' => $typeDefactCounts['OK_BUFFING'] ?? 0,
           
             'REPAINT' => $typeDefactCounts['REPAINT'] ?? 0,
             'OUT_TOTAL' => $typeDefactCounts['OUT_TOTAL'] ?? 0,
+            'Signal' => $latency??0,
         ];
        
 
