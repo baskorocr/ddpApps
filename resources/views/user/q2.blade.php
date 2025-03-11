@@ -214,6 +214,13 @@
             if (event.target.id === "refresh") {
                 console.log("Refresh button clicked!");
                 fetchPartNames(); // Panggil fungsi untuk refresh data
+                const select = document.getElementById("color");
+
+// Simpan opsi default
+const defaultOption = select.options[0].outerHTML;
+
+// Hapus semua opsi yang ada
+select.innerHTML = defaultOption;
             }
         });
 
@@ -351,7 +358,12 @@
                     signal.classList.add("red");
                 }
                     })
-                    .catch(error => console.error("Error fetching count data:", error));
+                    .catch(error => {
+                        let signal = document.querySelector(".signal");
+    console.error("Error fetching count data:", error);
+    document.getElementById("signal-strength").textContent = "disconected";
+    signal.classList.add("red");
+});
             }
 
             // Fetch data initially and set up an interval to refresh periodically

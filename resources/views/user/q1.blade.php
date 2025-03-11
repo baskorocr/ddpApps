@@ -316,7 +316,12 @@
                     signal.classList.add("red");
                 }
                     })
-                    .catch(error => console.error("Error fetching count data:", error));
+                    .catch(error => {
+                        let signal = document.querySelector(".signal");
+    console.error("Error fetching count data:", error);
+    document.getElementById("signal-strength").textContent = "disconected";
+    signal.classList.add("red");
+});
             }
 
             // Fetch data initially and set up an interval to refresh periodically
