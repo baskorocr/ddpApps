@@ -194,11 +194,13 @@
                     console.log(data); // Debugging untuk melihat response
 
                     data.forEach((item) => {
+                       
                         const option = document.createElement("option");
                         option.value = item.part_id; 
-                        option.textContent = item.item;
+                        option.textContent = `${item.item} (${item.type_part}, ${item.color})`;
                         option.dataset.colorId = item.idColor; // Simpan idColor sebagai data attribute
                         option.dataset.colorName = item.color; // Simpan nama warna
+                        
 
                         partNameSelect.appendChild(option);
                     });

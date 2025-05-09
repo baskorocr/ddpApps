@@ -30,6 +30,22 @@ class Controller extends BaseController
 
     }
 
+    public function unload(){
+        $lines = line::all();
+       
+
+        if (auth()->check() && auth()->user()->role == 'users') {
+            return redirect('users/dashboard');
+        }
+        if (auth()->check() && auth()->user()->role != 'users') {
+            return redirect(auth()->user()->role . '/dashboard');
+        } else {
+            return view('unload', compact('lines'));
+        }
+    }
+
+   
+
 
     public function line($id)
     {
@@ -44,6 +60,21 @@ class Controller extends BaseController
             return redirect(auth()->user()->role . '/dashboard');
         } else {
             return view('welcome3', compact('lines', 'lineFinds'));
+        }
+    }
+    public function unloadLine($id)
+    {
+        // Find the line by ID or fail if not found
+        $lines = line::all();
+        $lineFinds = line::findOrFail($id);  // Correct method
+
+        if (auth()->check() && auth()->user()->role == 'users') {
+            return redirect('users/dashboard');
+        }
+        if (auth()->check() && auth()->user()->role != 'users') {
+            return redirect(auth()->user()->role . '/dashboard');
+        } else {
+            return view('unload2', compact('lines', 'lineFinds'));
         }
     }
 }

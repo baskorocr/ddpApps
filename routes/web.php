@@ -31,6 +31,7 @@ use App\Http\Controllers\reports;
 
 Route::get('/', [Controller::class, 'index'])->name('index');
 Route::get('/line/{id}', [Controller::class, 'line']);
+Route::get('/unload/{id}', [Controller::class, 'unloadLine']);
 
 
 Route::get('/dashboard', function () {
@@ -84,7 +85,6 @@ Route::group(['middleware' => ['role:users'], 'prefix' => 'users'], function () 
     Route::get('/getPart2', [ProsesController::class, 'getpart2'])->name('getpart2');
 
 
-
     Route::post('/storeReqQ1', [ProsesController::class, 'storeReqQ1']);
     Route::post('/storeReqQ2', [ProsesController::class, 'storeReqQ2']);
     Route::post('/getData', [ProsesController::class, 'getData']);
@@ -97,6 +97,9 @@ Route::get('/reports', [reports::class, 'filterData'])->name('reports.index');
 Route::get('/reportDefact', [reports::class, 'filterDefact'])->name('defact.report');
 Route::get('/reports/export', [reports::class, 'exportData'])->name('reports.export');
 Route::get('/reports/defact', [reports::class, 'exportData2'])->name('reports.defact');
+
+Route::get('/unload', [Controller::class, 'unload'])->name('unload');
+Route::get('/unload2', [Controller::class, 'unload2'])->name('unload2');
 
 
 

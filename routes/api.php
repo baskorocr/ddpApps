@@ -23,3 +23,4 @@ Route::get('part-names/{typeId}', [ProsesController::class, 'getPartNames'])->na
 Route::get('/item-defacts/{typeId}', [ProsesController::class, 'getItemDefactsByType']);
 Route::get('/item-defacts/{item}/{typeId}/{typePart}{namePart}', [ProsesController::class, 'getData']);
 Route::get('/countPart', [ProsesController::class, 'countPart'])->name('count-parts');
+Route::get('/countPartQ1', [ProsesController::class, 'countQ1'])->name('count-partsQ1');

@@ -94,14 +94,16 @@ class ProsesController extends Controller
         $parts = DB::table('temp_defacts')
         ->join('parts', 'temp_defacts.idPart', '=', 'parts.id')
         ->join('colors', 'temp_defacts.idColor', '=', 'colors.id')
+        ->join('type_parts', 'parts.idType', '=', 'type_parts.id')
         ->select(
             'parts.id as part_id', // Aliasing id part
             'parts.item',
             'colors.id as color_id', // Aliasing id color
             'colors.color',
-            'temp_defacts.idColor'
+            'temp_defacts.idColor',
+            'type_parts.type as type_part'
         )
-        ->groupBy('parts.id', 'parts.item', 'colors.id', 'colors.color', 'temp_defacts.idColor')
+        ->groupBy('parts.id', 'parts.item', 'colors.id', 'colors.color', 'temp_defacts.idColor', 'type_parts.type')
         ->get();
      ;
         return response()->json($parts);
@@ -733,8 +735,59 @@ class ProsesController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
 
+    
         return response()->json($result);
 
+
+    }
+
+
+    public function countQ1(Request $request){
+     
+        $lineId = $request->query('line');
+  
+        try {
+            $result = DB::table('q1_s as fp')
+            ->join('parts as p', 'fp.idPart', '=', 'p.id')
+            ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
+            ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
+            ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
+            ->select(
+                'c.name as Customer_Name',
+                'tp.type as Part_Type',
+                'cl.color as Color',
+                'p.item as Item',
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "ok" THEN 1 END) as Total_OK_Count'),
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "BUFFING" THEN 1 END) as TBuffing_Count'),
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
+                DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
+                DB::raw('COUNT(CASE WHEN fp.typeDefact IN ("ok", "BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END) as TotalAll'),
+                DB::raw('MAX(fp.created_at) as created_at')
+            )
+            ->whereDate('fp.created_at', Carbon::today())
+            ->when($lineId, function ($query) use ($lineId) {
+                return $query->where('fp.idLine', $lineId);
+            })
+            ->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')
+            ->orderByDesc('created_at')
+            ->orderBy('c.name')
+            ->orderBy('tp.type')
+            ->orderBy('cl.color')
+            ->orderBy('p.item')
+            ->get();
+        
+        
+
+         
+                
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+
+    
+        return response()->json($result);
+        
 
     }
 }

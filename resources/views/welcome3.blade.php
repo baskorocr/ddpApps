@@ -86,7 +86,7 @@
                                         COLOR</th>
                                     <th
                                         class="text-3xl border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
-                                        UNLOAD</th>
+                                        <a href="{{route('unload')}}">UNLOAD</a></th></th>
                                     <th hidden
                                         class="hidden border-b border-black px-4 py-2 text-black dark:border-yellow-500 dark:text-yellow-500">
                                         OK</th>
@@ -225,10 +225,10 @@
                 rowCells[6].textContent = item.Total_OK_Buffing_Count;
                 rowCells[7].textContent = item.Total_Count_Repaint;
                 rowCells[8].textContent = item.Total_Count_OutTotal;
-                rowCells[9].textContent = rsp.toFixed(2) + '%';
-                rowCells[10].textContent = fsp.toFixed(2) + '%';
-                rowCells[11].textContent = repaintPercentage.toFixed(2) + '%';
-                rowCells[12].textContent = outTotalPercentage.toFixed(2) + '%';
+                rowCells[9].textContent = parseInt(rsp) + '%';
+                rowCells[10].textContent = parseInt(fsp) + '%';
+                rowCells[11].textContent = parseInt(repaintPercentage) + '%';
+                rowCells[12].textContent = parseInt(outTotalPercentage) + '%';
                 rowCells[13].textContent = item.Most_Frequent_Description || '-';
             }
 
@@ -244,10 +244,10 @@
                     <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_OK_Buffing_Count}</td>
                     <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_Count_Repaint}</td>
                     <td hidden class="border-b px-4 py-2 text-center hidden">${item.Total_Count_OutTotal}</td>
-                    <td class="text-3xl border-b px-4 py-2 text-center">${rsp.toFixed(0)}%</td>
-                    <td class="text-3xl border-b px-4 py-2 text-center">${fsp.toFixed(0)}%</td>
-                    <td class="text-3xl border-b px-4 py-2 text-center">${repaintPercentage.toFixed(0)}%</td>
-                    <td class="text-3xl border-b px-4 py-2 text-center">${outTotalPercentage.toFixed(0)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${parseInt(rsp)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${parseInt(fsp)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${parseInt(repaintPercentage)}%</td>
+                    <td class="text-3xl border-b px-4 py-2 text-center">${parseInt(outTotalPercentage)}%</td>
                       <td class="text-3xl border-b px-4 py-2 text-center">${item.Most_Frequent_Description || '-'}</td>
                             `;
                 return row;
