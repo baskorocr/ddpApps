@@ -77,7 +77,7 @@
                     <div>
                         <h2 class="text-lg font-semibold mb-4">Data Summary</h2>
                         <ul class="list-disc list-inside space-y-1">
-                           
+                        <li id="counting">Counting: <span id="count-value">0</span> </li>
                             <li id="buffing-item">Buffing: 0 (0%)</li>
                             <li id="repaint-item">Repaint: 0 (0%)</li>
                             <li id="ot-item">OT: 0 (0%)</li>
@@ -179,13 +179,10 @@
 
 
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const partNameSelect = document.getElementById("part_name");
-        const colorSelect = document.getElementById("color");
-        const url = `{{ route('getpart2') }}`; // Sesuaikan dengan route Laravel Anda
-
-        // Function untuk mengambil data part
         function fetchPartNames() {
+            const partNameSelect = document.getElementById("part_name");
+        const colorSelect = document.getElementById("color");
+        const url = `{{ route('getpart2') }}`
             partNameSelect.innerHTML = '<option value="">Select Part Name</option>';
 
             fetch(url)
@@ -204,11 +201,20 @@
 
                         partNameSelect.appendChild(option);
                     });
+
+                   
                 })
                 .catch((error) =>
                     console.error("Error fetching part names:", error)
                 );
         }
+    document.addEventListener("DOMContentLoaded", function () {
+        const partNameSelect = document.getElementById("part_name");
+        const colorSelect = document.getElementById("color");
+        const url = `{{ route('getpart2') }}`; // Sesuaikan dengan route Laravel Anda
+
+        // Function untuk mengambil data part
+        
         const refreshButton = document.getElementById("refresh");
 
         // Event listener untuk tombol refresh
@@ -244,6 +250,8 @@ select.innerHTML = defaultOption;
                 colorSelect.appendChild(option);
 
                 colorSelect.value = selectedColorId; // Pilih otomatis warna yang sesuai
+                const countValueEl = document.getElementById('count-value');
+                countValueEl.textContent = 0;
             }
         });
 
@@ -300,10 +308,16 @@ select.innerHTML = defaultOption;
                             icon: 'success',
                             title: 'Success!',
                             text: "Insert Data Successfully",
-                            timer: 500, // Auto close after 3 seconds
+                            timer: 300, // Auto close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
                         fetchPartNames();
+                        const countValueEl = document.getElementById('count-value');
+    // Ambil nilai sekarang, ubah ke number, tambah 1
+                        let currentCount = parseInt(countValueEl.textContent) || 0;
+                        currentCount++;
+                        // Update teksnya
+                        countValueEl.textContent = currentCount;
                         // Optionally, you can reset the form or perform other actions
                     },
                     error: function(xhr) {

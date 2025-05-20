@@ -81,15 +81,16 @@
                     <div>
                         <h2 class="text-lg font-semibold mb-4">Data Summary</h2>
                         <ul class="list-disc list-inside space-y-1">
+                            <li id="counting">Counting: <span id="count-value">0</span> </li>
                             <li id="ok-item">OK: 0 (0%)</li>
                             <li id="buffing-item">Buffing: 0 (0%)</li>
                             <li id="repaint-item">Repaint: 0 (0%)</li>
                             <li id="ot-item">OT: 0 (0%)</li>
                             <li id="signal">
-        <span class="signal"></span> Signal Strength: <span id="signal-strength">-</span>
-    </li>
+                                <span class="signal"></span> Signal Strength: <span id="signal-strength">-</span>
+                            </li>
                         </ul>
-                        <form method="POST" action="{{ route('logout') }}" class="mt-6">
+                        <form method="POST" action="{{ route('logout') }}" class="mt-2">
                             @csrf
                             <button type="submit"
                                 class="bg-red-500 w-200 text-white text-center py-2 px-4 rounded font-medium hover:bg-red-600">
@@ -113,7 +114,7 @@
                         @csrf
                         <input type="hidden" name="idStatus" value="1">
                         <input type="hidden" name="nameTypeDefact" value="ok">
-                        <button class="mb-4 bg-green-500 text-white text-center p-8 text-4xl font-bold rounded w-full">
+                        <button id="count-button" class="mb-4 bg-green-500 text-white text-center p-8 text-4xl font-bold rounded w-full">
                             OK
                         </button>
                     </form>
@@ -128,7 +129,7 @@
 
                                 <input type="hidden" name="nameTypeDefact" value="{{ $group[0]->nameType }}">
                                 <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button type="submit"
+                                <x-button id="count-button" type="submit"
                                     class="bg-blue-500 text-white hover:bg-blue-600 py-5 w-full text-base font-semibold">
                                     {{ $defact }}
                                 </x-button>
@@ -153,7 +154,7 @@
 
                                 <input type="hidden" name="nameTypeDefact" value="{{ $group[1]->nameType }}">
                                 <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button type="submit"
+                                <x-button id="count-button" type="submit"
                                     class="bg-yellow-500 text-white hover:bg-yellow-600 py-5 w-full text-base font-semibold">
                                     {{ $defact }}
                                 </x-button>
@@ -175,7 +176,7 @@
 
                                 <input type="hidden" name="nameTypeDefact" value="{{ $group[2]->nameType }}">
                                 <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button type="submit"
+                                <x-button id="count-button" type="submit"
                                     class="bg-red-500 text-white hover:bg-red-600 py-5 w-full text-base font-semibold">
                                     {{ $defact }}
                                 </x-button>
@@ -191,6 +192,7 @@
         function fetchPartNames() {
             const partTypeId = document.getElementById('part_type').value;
             const partNameSelect = document.getElementById('part_name');
+            const buttonCount = document.getElementById('count-button');
 
 
             // Clear previous options
@@ -208,6 +210,8 @@
                             option.textContent = item.item; // Adjust based on your actual item structure
                             partNameSelect.appendChild(option);
                         });
+                        const countValueEl = document.getElementById('count-value');
+                        countValueEl.textContent = 0;
                     })
                     .catch(error => console.error('Error fetching part names:', error));
             }
@@ -215,6 +219,7 @@
     </script>
     <script>
         $(document).ready(function() {
+        
             $('.defact-form').on('submit', function(event) {
                 event.preventDefault(); // Prevent the default form submission
 
@@ -259,9 +264,18 @@
                             icon: 'success',
                             title: 'Success!',
                             text: "Insert Data Successfully",
-                            timer: 500, // Auto close after 3 seconds
+                            timer: 300, // Auto close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
+
+                        const countValueEl = document.getElementById('count-value');
+    // Ambil nilai sekarang, ubah ke number, tambah 1
+                        let currentCount = parseInt(countValueEl.textContent) || 0;
+                        currentCount++;
+                        // Update teksnya
+                        countValueEl.textContent = currentCount;
+
+                        
                         // Optionally, you can reset the form or perform other actions
                     },
                     error: function(xhr) {
