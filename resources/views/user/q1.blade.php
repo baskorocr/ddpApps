@@ -192,8 +192,8 @@
         function fetchPartNames() {
             const partTypeId = document.getElementById('part_type').value;
             const partNameSelect = document.getElementById('part_name');
+            const colorSelect = document.getElementById('color');
             const buttonCount = document.getElementById('count-button');
-
 
             // Clear previous options
             partNameSelect.innerHTML = '<option value="">Select Part Name</option>';
@@ -210,12 +210,21 @@
                             option.textContent = item.item; // Adjust based on your actual item structure
                             partNameSelect.appendChild(option);
                         });
-                        const countValueEl = document.getElementById('count-value');
-                        countValueEl.textContent = 0;
                     })
                     .catch(error => console.error('Error fetching part names:', error));
-            }
         }
+
+        // Add event listeners to reset count when part name or color changes
+        partNameSelect.addEventListener('change', function() {
+            const countValueEl = document.getElementById('count-value');
+            countValueEl.textContent = 0;
+        });
+
+        colorSelect.addEventListener('change', function() {
+            const countValueEl = document.getElementById('count-value');
+            countValueEl.textContent = 0;
+        });
+    }
     </script>
     <script>
         $(document).ready(function() {
