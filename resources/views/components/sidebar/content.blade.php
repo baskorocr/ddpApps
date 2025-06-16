@@ -61,11 +61,11 @@
         <x-heroicon-o-view-grid class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
     </x-slot>
 
-    <x-sidebar.sublink title="FSP Data" href="{{ route('reports.index') }}" :active="request()->routeIs('reports.index')">
+    <!-- <x-sidebar.sublink title="FSP Data" href="{{ route('reports.index') }}" :active="request()->routeIs('reports.index')">
         <x-slot name="icon">
             <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
         </x-slot>
-    </x-sidebar.sublink>
+    </x-sidebar.sublink> -->
     <x-sidebar.sublink title="Detail Defact" href="{{ route('defact.report') }}" :active="request()->routeIs('reports.index')">
         <x-slot name="icon">
             <x-heroicon-o-user class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
