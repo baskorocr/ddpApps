@@ -9,32 +9,17 @@
         <!-- Filter Form -->
         <form id="filter-form" method="GET" action="{{ route('defact.report') }}"
             class="flex justify-between items-center gap-3 mb-4">
-            <!-- Filter options (dropdowns) -->
+            <!-- Filter options (date inputs) -->
             <div class="flex gap-3">
-                <select name="data_type" id="data_type" class="form-select w-auto text-black  dark:text-black">
-                    <option value="monthly" {{ request('data_type') == 'monthly' ? 'selected' : '' }}>Bulanan</option>
-                    <option value="yearly" {{ request('data_type') == 'yearly' ? 'selected' : '' }}>Tahunan</option>
-                </select>
-                <select name="month" id="month" class="form-select w-auto text-black  dark:text-black"
-                    {{ request('data_type') == 'yearly' ? 'disabled' : '' }}>
-                    @foreach (range(1, 12) as $month)
-                        <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
-                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}
-                        </option>
-                    @endforeach
-                </select>
-                <select name="year" id="year" class="form-select w-auto text-black  dark:text-black">
-                    @foreach (range(date('Y'), date('Y') - 10) as $year)
-                        <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
-                            {{ $year }}
-                        </option>
-                    @endforeach
-                </select>
+                <span>From:</span>
+                <input type="date" name="date_from" id="date_from" class="form-input w-auto text-black dark:text-black" value="{{ request('date_from') ?? date('Y-m-01') }}">
+                <span>To:</span>
+                <input type="date" name="date_to" id="date_to" class="form-input w-auto text-black dark:text-black" value="{{ request('date_to') ?? date('Y-m-t') }}">
             </div>
 
             <!-- Download Button (aligned to the right) -->
             <div class="ml-auto">
-                <a href="{{ route('reports.defact', ['data_type' => request('data_type'), 'month' => request('month'), 'year' => request('year')]) }}"
+                <a href="{{ route('reports.defact', ['date_from' => request('date_from'), 'date_to' => request('date_to')]) }}"
                     class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-6 py-2 rounded-md">
                     {{ __('Download Excel') }}
                 </a>
@@ -42,43 +27,114 @@
             </div>
         </form>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const filterForm = document.getElementById('filter-form');
+                const dateFromInput = document.getElementById('date_from');
+                const dateToInput = document.getElementById('date_to');
+
+                // Set default values if not present in request
+                if (!dateFromInput.value) {
+                    dateFromInput.value = '{{ date('Y-m-01') }}';
+                }
+                if (!dateToInput.value) {
+                    dateToInput.value = '{{ date('Y-m-t') }}';
+                }
+
+                // Add event listeners to submit form on date change
+                dateFromInput.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+
+                dateToInput.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            });
+        </script>
+
         <!-- Data Table -->
         <div class="overflow-x-auto">
-            <table class="table-auto min-w-full text-left text-sm">
-                <thead class="bg-gray-100 dark:bg-gray-700">
-                    <tr>
-                        <th class="px-4 py-2">{{ __('Customer Name') }}</th>
-                        <th class="px-4 py-2">{{ __('Part Type') }}</th>
-                        <th class="px-4 py-2">{{ __('Color') }}</th>
-                        <th class="px-4 py-2">{{ __('Item') }}</th>
-                        <th class="px-4 py-2">{{ __('Keterangan') }}</th>
-                        <th class="px-4 py-2">{{ __('Total OK') }}</th>
-                        <th class="px-4 py-2">{{ __('Total OK Buffing') }}</th>
-                        <th class="px-4 py-2">{{ __('Total Buffing') }}</th>
-                        <th class="px-4 py-2">{{ __('Total Out Total') }}</th>
-                        <th class="px-4 py-2">{{ __('Total Repaint') }}</th>
-                        <th class="px-4 py-2">{{ __('Total All') }}</th>
-                    
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($results as $result)
-                        <tr>
-                            <td class="px-4 py-2">{{ $result->Customer_Name }}</td>
-                            <td class="px-4 py-2">{{ $result->Part_Type }}</td>
-                            <td class="px-4 py-2">{{ $result->Color }}</td>
-                            <td class="px-4 py-2">{{ $result->Item }}</td>
-                            <td class="px-4 py-2">{{ $result->keterangan }}</td>
-                            <td class="px-4 py-2">{{ $result->Total_OK_Count ?? 0 }}</td>
-                            <td class="px-4 py-2">{{ $result->Total_OK_Buffing_Count ?? 0}}</td>
-                            <td class="px-4 py-2">{{ $result->Total_Count_Buffing ?? 0}}</td>
-                            <td class="px-4 py-2">{{ $result->Total_Count_OutTotal  ?? 0}}</td>
-                            <td class="px-4 py-2">{{ $result->Total_Count_Repaint ?? 0}}</td>
-                            <td class="px-4 py-2">{{ $result->TotalAll  ?? 0}}</td>
-                               </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <table class="w-full border-collapse">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="px-4 py-2 border">Customer</th>
+            <th class="px-4 py-2 border">Part Type</th>
+            <th class="px-4 py-2 border">Color</th>
+            <th class="px-4 py-2 border">Part</th>
+            <th class="px-4 py-2 border">Total</th>
+            <th class="px-4 py-2 border">OK</th>
+            <th class="px-4 py-2 border">OK Buffing</th>
+            <th class="px-4 py-2 border">Out Total</th>
+            
+            <!-- Dynamic Buffing Defect Columns -->
+            <th class="px-4 py-2 border">Buffing: Bintik Kotor</th>
+            <th class="px-4 py-2 border">Buffing: Absorb</th>
+            <th class="px-4 py-2 border">Buffing: Others</th>
+            <th class="px-4 py-2 border">Buffing: Scratch</th>
+            <th class="px-4 py-2 border">Buffing: Sanding Mark</th>
+            <th class="px-4 py-2 border">Buffing: Orange Peel</th>
+            <th class="px-4 py-2 border">Buffing: Dust Spray</th>
+            
+            <!-- Dynamic Repaint Defect Columns -->
+            <th class="px-4 py-2 border">Repaint: Unpainting</th>
+            <th class="px-4 py-2 border">Repaint: Scratch</th>
+            <th class="px-4 py-2 border">Repaint: Meler</th>
+            <th class="px-4 py-2 border">Repaint: Others</th>
+            <th class="px-4 py-2 border">Repaint: Orange Peel</th>
+            <th class="px-4 py-2 border">Repaint: Cratter Oil</th>
+            <th class="px-4 py-2 border">Repaint: Bintik Kotor</th>
+            <th class="px-4 py-2 border">Repaint: Absorb</th>
+            <th class="px-4 py-2 border">Repaint: Tipis</th>
+            <th class="px-4 py-2 border">Repaint: Dust Spray</th>
+            <th class="px-4 py-2 border">Repaint: Peel Off</th>
+            <th class="px-4 py-2 border">Repaint: Popping</th>
+            
+            <th class="px-4 py-2 border">RSP (%)</th>
+            <th class="px-4 py-2 border">FSP (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($results as $result)
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-2 border">{{ $result->Customer_Name }}</td>
+                <td class="px-4 py-2 border">{{ $result->Part_Type }}</td>
+                <td class="px-4 py-2 border">{{ $result->Color }}</td>
+                <td class="px-4 py-2 border">{{ $result->Part }}</td>
+                <td class="px-4 py-2 border">{{ $result->Total ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->OK ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->OK_BUFFING ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->OUT_TOTAL ?? 0 }}</td>
+                
+                <!-- Buffing Defects -->
+                <td class="px-4 py-2 border">{{ $result->BUFFING_BINTIK_KOTOR ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->BUFFING_ABSORB ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->BUFFING_OTHERS ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->BUFFING_SCRATCH ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->BUFFING_SANDING_MARK ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->BUFFING_ORANGE_PEEL ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->BUFFING_DUST_SPRAY ?? 0 }}</td>
+                
+                <!-- Repaint Defects -->
+                <td class="px-4 py-2 border">{{ $result->REPAINT_UNPAINTING ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_SCRATCH ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_MELER ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_OTHERS ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_ORANGE_PEEL ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_CRATTER_OIL ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_BINTIK_KOTOR ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_ABSORB ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_TIPIS ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_DUST_SPRAY ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_PEEL_OFF ?? 0 }}</td>
+                <td class="px-4 py-2 border">{{ $result->REPAINT_POPPING ?? 0 }}</td>
+                
+                <td class="px-4 py-2 border">{{ number_format($result->RSP, 2) }}%</td>
+                <td class="px-4 py-2 border">{{ number_format($result->FSP, 2) }}%</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
         </div>
     </div>
 

@@ -8,420 +8,162 @@ use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
 
+
 class reports extends Controller
 {
-
-    // Filter data based on the selected month, year, and data type
-    public function filterData(Request $request)
-    {
-        $dataType = $request->input('data_type', 'monthly');  // Default is monthly
-        $month = $request->input('month', Carbon::now()->month);  // Default to current month
-        $year = $request->input('year', Carbon::now()->year);  // Default to current year
-
-        // Fetch the filtered data based on selected criteria
-        $results = $this->fetchData($month, $year, $dataType === 'yearly' ? 'yearly' : 'daily');
-
-        // Return the view with the results
-        return view('reports.index', compact('results'));
-    }
-
-    // Handle export of data based on the selected data type (monthly or yearly)
-    public function exportData(Request $request)
-    {
-        $dataType = $request->input('data_type', 'monthly');  // Default is monthly
-        $month = $request->input('month', Carbon::now()->month);  // Default to current month
-        $year = $request->input('year', Carbon::now()->year);  // Default to current year
-
-        // Call the appropriate export method based on the selected data type
-        if ($dataType === 'monthly') {
-            return $this->exportMonthlyData($month, $year);
-        } elseif ($dataType === 'yearly') {
-            return $this->exportYearlyData($year);
-        }
-    }
-    public function exportData2(Request $request)
-    {
-        $dataType = $request->input('data_type', 'monthly');  // Default is monthly
-        $month = $request->input('month', Carbon::now()->month);  // Default to current month
-        $year = $request->input('year', Carbon::now()->year);  // Default to current year
-
-        // Call the appropriate export method based on the selected data type
-        if ($dataType === 'monthly') {
-            return $this->exportMonthlyData2($month, $year);
-        } elseif ($dataType === 'yearly') {
-            return $this->exportYearlyData2($year);
-        }
-    }
-
-    // Export monthly data to an Excel file
-    private function exportMonthlyData($month, $year)
-    {
-        $data = $this->fetchData($month, $year, 'daily');
-        $fileName = "Monthly_Data_{$month}_{$year}.xlsx";
-
-        // Ensure the data is formatted for FastExcel and export the file
-        return (new FastExcel($data))->download($fileName);
-    }
-    private function exportMonthlyData2($month, $year)
-    {
-        $data = $this->fetchDefact($month, $year, 'daily');
-        $fileName = "Monthly_Data_{$month}_{$year}.xlsx";
-
-        // Ensure the data is formatted for FastExcel and export the file
-        return (new FastExcel($data))->download($fileName);
-    }
-
-
-
-
-
-    // Export yearly data to an Excel file with separate sheets for each month
-    // private function exportYearlyData($year)
-    // {
-    //     $sheets = [];
-
-    //     // Loop through each month to fetch and organize data
-    //     for ($month = 1; $month <= 12; $month++) {
-    //         $data = $this->fetchData($month, $year, 'daily');
-
-    //         if (!empty($data)) {
-    //             $monthName = Carbon::create()->month($month)->format('F');
-    //             $sheets[$monthName] = collect($data)->map(function ($item) {
-    //                 return [
-    //                     'Customer_Name' => $item->Customer_Name,
-    //                     'Part_Type' => $item->Part_Type,
-    //                     'Color' => $item->Color,
-    //                     'Item' => $item->Item,
-    //                     'Total_OK_Count' => $item->Total_OK_Count,
-    //                     'Total_OK_Buffing_Count' => $item->Total_OK_Buffing_Count,
-    //                     'Total_Count_OutTotal' => $item->Total_Count_OutTotal,
-    //                     'Total_Count_Repaint' => $item->Total_Count_Repaint,
-    //                     'TotalAll' => $item->TotalAll,
-    //                     'rsp' => $item->rsp,
-    //                     'fsp' => $item->fsp,
-    //                 ];
-    //             });
-    //         }
-    //     }
-
-    //     $fileName = "Yearly_Data_{$year}.xlsx";
-    //     $sheetCollection = new SheetCollection($sheets);
-
-    //     // Export all sheets in one Excel file
-    //     return (new FastExcel($sheetCollection))->download($fileName);
-    // }
-
-    private function exportYearlyData($year)
-    {
-       
-        $sheets = [];
-
-        // Loop melalui semua bulan untuk mengumpulkan data bulanan
-        for ($month = 1; $month <= 12; $month++) {
-            $data = $this->fetchData($month, $year, 'monthly'); // Gunakan tipe data 'monthly'
-
-            if (!empty($data)) {
-                $monthName = Carbon::create()->month($month)->format('F'); // Nama bulan
-                $sheets[$monthName] = collect($data)->map(function ($item) {
-                    return [
-                        'Date' => $item->Date,  // Format bulan dalam 'YYYY-MM'
-                        'Customer_Name' => $item->Customer_Name,
-                        'Part_Type' => $item->Part_Type,
-                        'Color' => $item->Color,
-                        'Item' => $item->Item,
-                        'Total_OK_Count' => $item->Total_OK_Count,
-                        'Total_Buffing' => $item->Total_Count_Buffing,
-                        'Total_OK_Buffing_Count' => $item->Total_OK_Buffing_Count,
-                        'Total_Count_OutTotal' => $item->Total_Count_OutTotal,
-                        'Total_Count_Repaint' => $item->Total_Count_Repaint,
-                        'TotalAll' => $item->TotalAll,
-                        'rsp' => $item->rsp,
-                        'fsp' => $item->fsp,
-                    ];
-                });
-            }
-        }
-
-        $fileName = "Yearly_Data_{$year}.xlsx";
-        $sheetCollection = new SheetCollection($sheets);
-
-        // Ekspor semua sheet ke file Excel
-        return (new FastExcel($sheetCollection))->download($fileName);
-    }
-    private function exportYearlyData2($year)
-    {
-       
-        $sheets = [];
-
-        // Loop melalui semua bulan untuk mengumpulkan data bulanan
-        for ($month = 1; $month <= 12; $month++) {
-            $data = $this->fetchDefact($month, $year, 'monthly'); // Gunakan tipe data 'monthly'
-
-            if (!empty($data)) {
-                $monthName = Carbon::create()->month($month)->format('F'); // Nama bulan
-                $sheets[$monthName] = collect($data)->map(function ($item) {
-                    return [
-                        'Date' => $item->Date,  // Format bulan dalam 'YYYY-MM'
-                        'Customer_Name' => $item->Customer_Name,
-                        'Part_Type' => $item->Part_Type,
-                        'Color' => $item->Color,
-                        'Item' => $item->Item,
-                        'Total_OK_Count' => $item->Total_OK_Count,
-                        'Total_Buffing' => $item->Total_Buffing_Count,
-                        'Total_OK_Buffing_Count' => $item->Total_OK_Buffing_Count,
-                        'Total_Count_OutTotal' => $item->Total_Count_OutTotal,
-                        'Total_Count_Repaint' => $item->Total_Count_Repaint,
-                        'TotalAll' => $item->TotalAll,
-                      
-                    ];
-                });
-            }
-        }
-
-        $fileName = "Yearly_Data_{$year}.xlsx";
-        $sheetCollection = new SheetCollection($sheets);
-
-        // Ekspor semua sheet ke file Excel
-        return (new FastExcel($sheetCollection))->download($fileName);
-    }
-
-    private function fetchData($month, $year, $type)
-    {
-       
-        $query = DB::table('fix_proses as fp')
-        ->join('parts as p', 'fp.idPart', '=', 'p.id')
-        ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-        ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-        ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-        ->select(
-            $type === 'monthly'
-            ? DB::raw('DATE_FORMAT(fp.created_at, "%Y-%m") as Date')  // Format tanggal 'YYYY-MM' untuk bulanan
-            : DB::raw('DATE(fp.created_at) as Date'),                 // Format harian untuk data bulanan
-            'c.name as Customer_Name',
-            'tp.type as Part_Type',
-            'cl.color as Color',
-            'p.item as Item',
-            DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-            DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-            DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-            DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-            DB::raw('COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END) as TotalAll'),
-            DB::raw('(COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
-                  COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END)) * 100 as rsp'),
-            DB::raw('((COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-                   COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END)) / 
-                  COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END)) * 100 as fsp')
-        )
-        ->whereYear('fp.created_at', $year);
-
-    if ($type === 'daily') {
-        // Data harian berdasarkan bulan
-        $query->whereMonth('fp.created_at', $month);
-    } elseif ($type === 'monthly') {
-        // Data bulanan: filter berdasarkan bulan
-        $query->whereMonth('fp.created_at', $month);
-    }
-
-    // Pengelompokan berdasarkan tipe data
-    if ($type === 'monthly') {
-        $query->groupBy(DB::raw('DATE_FORMAT(fp.created_at, "%Y-%m")'), 'c.name', 'tp.type', 'cl.color', 'p.item');
-    } else {
-        $query->groupBy('Date', 'c.name', 'tp.type', 'cl.color', 'p.item');
-    }
-
-    // Eksekusi query dan kembalikan hasil
-    return $query->get()->toArray();
-    }
-
     public function filterDefact(Request $request){
        
-        $dataType = $request->input('data_type', 'monthly');  // Default is monthly
-        $month = $request->input('month', Carbon::now()->month);  // Default to current month
-        $year = $request->input('year', Carbon::now()->year);  // Default to current year
+     
+        
+       $date_from =Carbon::parse($request->date_from)->startOfDay();
+       $date_to = Carbon::parse($request->date_to)->startOfDay();
 
+
+      
         // Fetch the filtered data based on selected criteria
-        $results = $this->fetchDefact($month, $year, $dataType === 'yearly' ? 'yearly' : 'daily');
+        $results = $this->fetchDefact($date_from, $date_to);
 
         // Return the view with the results
         return view('reports.detailDefact', compact('results'));
 
     }
-
-    private function fetchDefact($month, $year, $type)
+    public function exportData2(Request $request)
     {
-        $query1 = DB::table('fix_proses as fp')
-        ->join('parts as p', 'fp.idPart', '=', 'p.id')
-        ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-        ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-        ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-        ->select(
-            $type === 'monthly'
-                ? DB::raw('DATE_FORMAT(fp.created_at, "%Y-%m") as Date')
-                : DB::raw('DATE(fp.created_at) as Date'),
-            'c.name as Customer_Name',
-            'tp.type as Part_Type',
-            'cl.color as Color',
-            'p.item as Item',
-            'fp.keterangan',
-            DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-            DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-            DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-            DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-            DB::raw('COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END) as TotalAll'),
-            DB::raw('0 as Total_Buffing_Count') // Tambahkan kolom kosong agar UNION berhasil
-        )
-        ->whereYear('fp.created_at', $year)
-        ->groupBy(
-            DB::raw($type === 'monthly' ? 'DATE_FORMAT(fp.created_at, "%Y-%m")' : 'DATE(fp.created_at)'),
-            'c.name', 'tp.type', 'cl.color', 'p.item', 'fp.keterangan'
-        );
-    
-    $query2 = DB::table('temp_defacts as td')
-        ->join('parts as p', 'td.idPart', '=', 'p.id')
-        ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-        ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-        ->join('colors as cl', 'td.idColor', '=', 'cl.id')
-        ->select(
-            $type === 'monthly'
-                ? DB::raw('DATE_FORMAT(td.created_at, "%Y-%m") as Date')
-                : DB::raw('DATE(td.created_at) as Date'),
-            'c.name as Customer_Name',
-            'tp.type as Part_Type',
-            'cl.color as Color',
-            'p.item as Item',
-            'td.keterangan',
-            DB::raw('0 as Total_OK_Count'),
-            DB::raw('0 as Total_OK_Buffing_Count'),
-            DB::raw('0 as Total_Count_OutTotal'),
-            DB::raw('0 as Total_Count_Repaint'),
-            DB::raw('0 as TotalAll'),
-            DB::raw('COUNT(CASE WHEN td.typeDefact = "BUFFING" THEN 1 END) as Total_Buffing_Count')
-        )
-        ->whereYear('td.created_at', $year)
-        ->groupBy(
-            DB::raw($type === 'monthly' ? 'DATE_FORMAT(td.created_at, "%Y-%m")' : 'DATE(td.created_at)'),
-            'c.name', 'tp.type', 'cl.color', 'p.item', 'td.keterangan'
-        );
-    
-    // Tambahkan filter bulan jika diperlukan
-    if ($type === 'daily' || $type === 'monthly') {
-        $query1->whereMonth('fp.created_at', $month);
-        $query2->whereMonth('td.created_at', $month);
+        $date_from = $request->date_from;
+    $date_to = $request->date_to;
+
+    $fileName = "DataExport.xlsx";
+
+    $results = $this->fetchDefact($date_from, $date_to)->map(fn ($row) => (array) $row);
+
+
+    $sheets = new SheetCollection([
+        'Export Data' => $results,
+    ]);
+
+    return (new FastExcel($sheets))->download($fileName);
     }
-    
-    // Gabungkan query1 dan query2 dengan UNION
-    $finalQuery = $query1->union($query2);
-    
-    // Eksekusi query dan tampilkan hasil
 
-    
+    private function exportMonthlyData2($month, $year)
+    {
+        $data = $this->fetchDefact($month, $year, 'daily');
+        $fileName = "Monthly_Data_{$month}_{$year}.xlsx";
 
-// Eksekusi query dan kembalikan hasil
-return $finalQuery->get()->toArray();
+        
+        // Ensure the data is formatted for FastExcel and export the file
+        return (new FastExcel($data))->download($fileName);
+    }
+   
+
+    private function fetchDefact($date_from, $date_to)
+    {
+           // Ambil nilai keterangan unik untuk BUFFING dan REPAINT saja (OK_BUFFING tidak dipakai lagi di sini)
+    $buffingKeterangan = DB::table('temp_defacts')
+    ->select('keterangan')
+    ->where('typeDefact', 'BUFFING')
+    ->whereBetween('created_at', [$date_from, $date_to])
+    ->distinct()
+    ->pluck('keterangan')
+    ->unique()
+    ->values();
+
+$repaintKeterangan = DB::table('fix_proses')
+    ->select('keterangan')
+    ->where('typeDefact', 'REPAINT')
+    ->whereBetween('created_at', [$date_from, $date_to])
+    ->distinct()
+    ->pluck('keterangan')
+    ->unique()
+    ->values();
+
+// Query fix_proses
+$fixProses = DB::table('fix_proses as fp')
+    ->join('parts as p', 'fp.idPart', '=', 'p.id')
+    ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
+    ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
+    ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
+    ->select(
+        'p.item as Part',
+        'tp.type as Part_Type',
+        'c.name as Customer_Name',
+        'cl.color as Color',
+        'fp.keterangan',
+        'fp.typeDefact',
+        DB::raw('count(*) as jumlah')
+    )
+    ->whereBetween('fp.created_at', [$date_from, $date_to])
+    ->groupBy('p.item', 'tp.type', 'c.name', 'cl.color', 'fp.keterangan', 'fp.typeDefact');
+
+// Query temp_defacts
+$tempDefacts = DB::table('temp_defacts as td')
+    ->join('parts as p', 'td.idPart', '=', 'p.id')
+    ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
+    ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
+    ->join('colors as cl', 'td.idColor', '=', 'cl.id')
+    ->select(
+        'p.item as Part',
+        'tp.type as Part_Type',
+        'c.name as Customer_Name',
+        'cl.color as Color',
+        'td.keterangan',
+        DB::raw('"BUFFING" as typeDefact'),
+        DB::raw('count(*) as jumlah')
+    )
+    ->where('td.typeDefact', 'BUFFING')
+    ->whereBetween('td.created_at', [$date_from, $date_to])
+    ->groupBy('p.item', 'tp.type', 'c.name', 'cl.color', 'td.keterangan');
+
+// Union kedua query
+$union = $fixProses->unionAll($tempDefacts);
+
+// Kolom utama
+$selects = [
+    'Part',
+    'Part_Type',
+    'Customer_Name',
+    'Color',
+    DB::raw('SUM(jumlah) as Total'),
+    DB::raw('SUM(CASE WHEN typeDefact = "OK" THEN jumlah ELSE 0 END) as OK'),
+    DB::raw('SUM(CASE WHEN typeDefact = "OK_BUFFING" THEN jumlah ELSE 0 END) as OK_BUFFING'),
+    DB::raw('SUM(CASE WHEN typeDefact = "OUT_TOTAL" THEN jumlah ELSE 0 END) as OUT_TOTAL'),
+];
+
+// Tambahan kolom dinamis BUFFING
+foreach ($buffingKeterangan as $buffing) {
+    $alias = strtoupper(str_replace([' ', '/', '-', '.'], '_', $buffing));
+    $selects[] = DB::raw("SUM(CASE WHEN keterangan = '$buffing' AND typeDefact = 'BUFFING' THEN jumlah ELSE 0 END) as BUFFING_$alias");
+}
+
+// Tambahan kolom dinamis REPAINT
+foreach ($repaintKeterangan as $repaint) {
+    $alias = strtoupper(str_replace([' ', '/', '-', '.'], '_', $repaint));
+    $selects[] = DB::raw("SUM(CASE WHEN keterangan = '$repaint' AND typeDefact = 'REPAINT' THEN jumlah ELSE 0 END) as REPAINT_$alias");
+}
+
+// Tambah kolom persentase
+$selects[] = DB::raw('ROUND((SUM(CASE WHEN typeDefact = "OK" THEN jumlah ELSE 0 END) * 100.0) / NULLIF(SUM(jumlah), 0), 2) as RSP');
+$selects[] = DB::raw('ROUND((SUM(CASE WHEN typeDefact IN ("OK", "OK_BUFFING") THEN jumlah ELSE 0 END) * 100.0) / NULLIF(SUM(jumlah), 0), 2) as FSP');
+
+// Eksekusi query akhir
+$data = DB::table(DB::raw("({$union->toSql()}) as defects"))
+    ->mergeBindings($union)
+    ->select($selects)
+    ->groupBy('Part', 'Part_Type', 'Customer_Name', 'Color')
+    ->orderBy('Part')
+    ->get();
+
+return $data;
+
+   
+
+       
 
     }
+
+
+    
+    
 
 }
 
 
-// Fetch data based on selected month, year, and data type (daily or yearly)
-//     private function fetchData($month, $year, $type)
-//     {
-//         $query = DB::table('fix_proses as fp')
-//             ->join('parts as p', 'fp.idPart', '=', 'p.id')
-//             ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-//             ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-//             ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-//             ->select(
-//                 'c.name as Customer_Name',
-//                 'tp.type as Part_Type',
-//                 'cl.color as Color',
-//                 'p.item as Item',
-//                 DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-//                 DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-//                 DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-//                 DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-//                 DB::raw('COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END) as TotalAll'),
-//                 DB::raw('(COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
-//                           COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END)) * 100 as rsp'),
-//                 DB::raw('((COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-//                            COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END)) / 
-//                           COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END)) * 100 as fsp')
-//             )
-//             ->whereYear('fp.created_at', $year);
-
-//         // If fetching daily data, filter by month as well
-//         if ($type === 'daily') {
-//             $query->whereMonth('fp.created_at', $month);
-//         }
-
-//         // Execute the query and return the result as an array
-//         return $query->groupBy('c.name', 'tp.type', 'cl.color', 'p.item')->get()->toArray();
-//     }
-// }
-
-
-
-
-// private function exportMonthlyData($month, $year)
-// {
-//     $sheets = [];
-
-//     // Fetch data grouped by day
-//     $dataGroupedByDay = DB::table('fix_proses as fp')
-//         ->join('parts as p', 'fp.idPart', '=', 'p.id')
-//         ->join('type_parts as tp', 'p.idType', '=', 'tp.id')
-//         ->join('customers as c', 'tp.idCustomer', '=', 'c.id')
-//         ->join('colors as cl', 'fp.idColor', '=', 'cl.id')
-//         ->select(
-//             DB::raw('DATE(fp.created_at) as date'),
-//             'c.name as Customer_Name',
-//             'tp.type as Part_Type',
-//             'cl.color as Color',
-//             'p.item as Item',
-//             DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) as Total_OK_Count'),
-//             DB::raw('COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END) as Total_OK_Buffing_Count'),
-//             DB::raw('COUNT(CASE WHEN fp.typeDefact = "OUT_TOTAL" THEN 1 END) as Total_Count_OutTotal'),
-//             DB::raw('COUNT(CASE WHEN fp.typeDefact = "REPAINT" THEN 1 END) as Total_Count_Repaint'),
-//             DB::raw('COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END) as TotalAll'),
-//             DB::raw('(COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) / 
-//                   COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END)) * 100 as rsp'),
-//             DB::raw('((COUNT(CASE WHEN fp.typeDefact = "OK" THEN 1 END) + 
-//                    COUNT(CASE WHEN fp.typeDefact = "OK_BUFFING" THEN 1 END)) / 
-//                   COUNT(CASE WHEN fp.typeDefact IN ("OK", "OK_BUFFING", "OUT_TOTAL", "REPAINT") THEN 1 END)) * 100 as fsp')
-//         )
-//         ->whereYear('fp.created_at', $year)
-//         ->whereMonth('fp.created_at', $month)
-//         ->groupBy('date', 'c.name', 'tp.type', 'cl.color', 'p.item')
-//         ->orderBy('date')
-//         ->get()
-//         ->groupBy('date');
-
-//     // Organize data into sheets by day
-//     foreach ($dataGroupedByDay as $date => $data) {
-//         $sheets[$date] = collect($data)->map(function ($item) {
-//             return [
-//                 'Customer_Name' => $item->Customer_Name,
-//                 'Part_Type' => $item->Part_Type,
-//                 'Color' => $item->Color,
-//                 'Item' => $item->Item,
-//                 'Total_OK_Count' => $item->Total_OK_Count,
-//                 'Total_OK_Buffing_Count' => $item->Total_OK_Buffing_Count,
-//                 'Total_Count_OutTotal' => $item->Total_Count_OutTotal,
-//                 'Total_Count_Repaint' => $item->Total_Count_Repaint,
-//                 'TotalAll' => $item->TotalAll,
-//                 'rsp' => number_format($item->rsp, 2) . '%',
-//                 'fsp' => number_format($item->fsp, 2) . '%',
-//             ];
-//         });
-//     }
-
-//     // Use SheetCollection to create multiple sheets
-//     $sheetCollection = new SheetCollection($sheets);
-
-//     // File name with month and year
-//     $fileName = "Monthly_Data_{$month}_{$year}.xlsx";
-
-//     // Download Excel with multiple sheets
-//     return (new FastExcel($sheetCollection))->download($fileName);
-// }
