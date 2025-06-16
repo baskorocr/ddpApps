@@ -54,88 +54,73 @@
 
         <!-- Data Table -->
         <div class="overflow-x-auto">
-        <table class="w-full border-collapse">
-    <thead class="bg-gray-100">
-        <tr>
-            <th class="px-4 py-2 border">Customer</th>
-            <th class="px-4 py-2 border">Part Type</th>
-            <th class="px-4 py-2 border">Color</th>
-            <th class="px-4 py-2 border">Part</th>
-            <th class="px-4 py-2 border">Total</th>
-            <th class="px-4 py-2 border">OK</th>
-            <th class="px-4 py-2 border">OK Buffing</th>
-            <th class="px-4 py-2 border">Out Total</th>
-            
-            <!-- Dynamic Buffing Defect Columns -->
-            <th class="px-4 py-2 border">Buffing: Bintik Kotor</th>
-            <th class="px-4 py-2 border">Buffing: Absorb</th>
-            <th class="px-4 py-2 border">Buffing: Others</th>
-            <th class="px-4 py-2 border">Buffing: Scratch</th>
-            <th class="px-4 py-2 border">Buffing: Sanding Mark</th>
-            <th class="px-4 py-2 border">Buffing: Orange Peel</th>
-            <th class="px-4 py-2 border">Buffing: Dust Spray</th>
-            
-            <!-- Dynamic Repaint Defect Columns -->
-            <th class="px-4 py-2 border">Repaint: Unpainting</th>
-            <th class="px-4 py-2 border">Repaint: Scratch</th>
-            <th class="px-4 py-2 border">Repaint: Meler</th>
-            <th class="px-4 py-2 border">Repaint: Others</th>
-            <th class="px-4 py-2 border">Repaint: Orange Peel</th>
-            <th class="px-4 py-2 border">Repaint: Cratter Oil</th>
-            <th class="px-4 py-2 border">Repaint: Bintik Kotor</th>
-            <th class="px-4 py-2 border">Repaint: Absorb</th>
-            <th class="px-4 py-2 border">Repaint: Tipis</th>
-            <th class="px-4 py-2 border">Repaint: Dust Spray</th>
-            <th class="px-4 py-2 border">Repaint: Peel Off</th>
-            <th class="px-4 py-2 border">Repaint: Popping</th>
-            
-            <th class="px-4 py-2 border">RSP (%)</th>
-            <th class="px-4 py-2 border">FSP (%)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($results as $result)
-            <tr class="hover:bg-gray-50">
-                <td class="px-4 py-2 border">{{ $result->Customer_Name }}</td>
-                <td class="px-4 py-2 border">{{ $result->Part_Type }}</td>
-                <td class="px-4 py-2 border">{{ $result->Color }}</td>
-                <td class="px-4 py-2 border">{{ $result->Part }}</td>
-                <td class="px-4 py-2 border">{{ $result->Total ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->OK ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->OK_BUFFING ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->OUT_TOTAL ?? 0 }}</td>
-                
-                <!-- Buffing Defects -->
-                <td class="px-4 py-2 border">{{ $result->BUFFING_BINTIK_KOTOR ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->BUFFING_ABSORB ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->BUFFING_OTHERS ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->BUFFING_SCRATCH ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->BUFFING_SANDING_MARK ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->BUFFING_ORANGE_PEEL ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->BUFFING_DUST_SPRAY ?? 0 }}</td>
-                
-                <!-- Repaint Defects -->
-                <td class="px-4 py-2 border">{{ $result->REPAINT_UNPAINTING ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_SCRATCH ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_MELER ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_OTHERS ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_ORANGE_PEEL ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_CRATTER_OIL ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_BINTIK_KOTOR ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_ABSORB ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_TIPIS ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_DUST_SPRAY ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_PEEL_OFF ?? 0 }}</td>
-                <td class="px-4 py-2 border">{{ $result->REPAINT_POPPING ?? 0 }}</td>
-                
-                <td class="px-4 py-2 border">{{ number_format($result->RSP, 2) }}%</td>
-                <td class="px-4 py-2 border">{{ number_format($result->FSP, 2) }}%</td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+    <div class="bg-blue-50 p-3 mb-2 border-b border-blue-200">
+        <h3 class="text-lg font-semibold text-blue-800">RSP (Repair Success Percentage)</h3>
+        <p class="text-sm text-blue-600">
+            Percentage of units successfully repaired (OK) compared to total units processed
+        </p>
+    </div>
 
-        </div>
+    @if(count($results) > 0)
+        <table class="w-full border-collapse">
+            <thead class="bg-gray-100">
+                <tr>
+                    @foreach(array_keys((array) $results[0]) as $col)
+                        <th class="px-4 py-2 border">
+                            {{ ucwords(str_replace('_', ' ', preg_replace('/(BUFFING|REPAINT|TOTAL|OK BUFFING|OUT TOTAL|RSP)/i', '$0', $col))) }}
+                        </th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($results as $row)
+                    <tr class="hover:bg-gray-50">
+                        @foreach((array) $row as $val)
+                            <td class="px-4 py-2 border">{{ $val ?? 0 }}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <div class="text-center p-4 text-gray-500">No data available</div>
+    @endif
+</div>
+
+        <div class="overflow-x-auto">
+    <div class="bg-blue-50 p-3 mb-2 border-b border-blue-200">
+        <h3 class="text-lg font-semibold text-blue-800">FSP (Final Success Percentage)</h3>
+        <p class="text-sm text-blue-600">
+            Percentage of units successfully repaired (OK) compared to total units processed
+        </p>
+    </div>
+
+    @if(count($fsp) > 0)
+        <table class="w-full border-collapse">
+            <thead class="bg-gray-100">
+                <tr>
+                    @foreach(array_keys((array) $fsp[0]) as $col)
+                        <th class="px-4 py-2 border">
+                            {{ ucwords(str_replace(['_', 'BUFFING:', 'REPAINT:'], [' ', 'Buffing: ', 'Repaint: '], str_replace(['BUFFING_', 'REPAINT_', 'TOTAL_', 'OK_BUFFING', 'OUT_TOTAL'], ['Buffing: ', 'Repaint: ', 'Total ', 'OK Buffing', 'NG'], strtoupper($col)))) }}
+                        </th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($fsp as $row)
+                    <tr class="hover:bg-gray-50">
+                        @foreach ((array) $row as $value)
+                            <td class="px-4 py-2 border">{{ $value ?? 0 }}</td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <div class="text-center p-4 text-gray-500">No data available</div>
+    @endif
+</div>
+
     </div>
 
     <script>
