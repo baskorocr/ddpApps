@@ -731,7 +731,7 @@ class ProsesController extends Controller
                 ->orderBy('p.item')
                 ->get();
 
-                dd($result);
+      
 
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
