@@ -55,10 +55,8 @@
         <!-- Data Table -->
         <div class="overflow-x-auto">
     <div class="bg-blue-50 p-3 mb-2 border-b border-blue-200">
-        <h3 class="text-lg font-semibold text-blue-800">RSP (Repair Success Percentage)</h3>
-        <p class="text-sm text-blue-600">
-            Percentage of units successfully repaired (OK) compared to total units processed
-        </p>
+        <h3 class="text-lg font-semibold text-blue-800">RSP</h3>
+       
     </div>
 
     @if(count($results) > 0)
@@ -89,10 +87,8 @@
 
         <div class="overflow-x-auto">
     <div class="bg-blue-50 p-3 mb-2 border-b border-blue-200">
-        <h3 class="text-lg font-semibold text-blue-800">FSP (Final Success Percentage)</h3>
-        <p class="text-sm text-blue-600">
-            Percentage of units successfully repaired (OK) compared to total units processed
-        </p>
+        <h3 class="text-lg font-semibold text-blue-800">FSP</h3>
+       
     </div>
 
     @if(count($fsp) > 0)
