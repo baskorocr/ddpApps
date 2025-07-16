@@ -122,20 +122,42 @@
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
 
 
-                        @foreach ($group[0]->itemDefacts as $index => $defact)
-                            <form class="defact-form">
-                                @csrf
-                                <input type="hidden" name="idItemDefact" value="{{ $idItemDefactsArray[$index] }}">
+                    @php
+                        $priority = ['BINTIK KOTOR', 'SCRATCH', 'TIPIS', 'MELER'];
 
-                                <input type="hidden" name="nameTypeDefact" value="{{ $group[0]->nameType }}">
-                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button id="count-button" type="submit"
-                                    class="bg-blue-500 text-white hover:bg-blue-600 py-5 w-full text-base font-semibold">
-                                    {{ $defact }}
-                                </x-button>
-                            </form>
-                        @endforeach
+                        $buffingDefacts = collect($group[0]->itemDefacts)
+                            ->map(function ($defact, $index) use ($idItemDefactsArray) {
+                                return [
+                                    'defact' => $defact,
+                                    'id' => $idItemDefactsArray[$index],
+                                ];
+                            })
+                            ->sortBy(function ($item) use ($priority) {
+                                $defactUpper = strtoupper($item['defact']);
 
+                                if ($defactUpper === 'OTHERS') {
+                                    return 1000; // Taruh paling terakhir
+                                }
+
+                                $index = array_search($defactUpper, $priority);
+                                return $index !== false ? $index : 999;
+                            })
+                            ->values();
+                    @endphp
+
+
+                    @foreach ($buffingDefacts as $item)
+                        <form class="defact-form">
+                            @csrf
+                            <input type="hidden" name="idItemDefact" value="{{ $item['id'] }}">
+                            <input type="hidden" name="nameTypeDefact" value="{{ $group[0]->nameType }}">
+                            <input type="hidden" name="itemDefact" value="{{ $item['defact'] }}">
+                            <x-button id="count-button" type="submit"
+                                class="bg-blue-500 text-white hover:bg-blue-600 py-5 w-full text-base font-semibold">
+                                {{ $item['defact'] }}
+                            </x-button>
+                        </form>
+                    @endforeach
 
                     </div>
                 </div>
@@ -146,20 +168,42 @@
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
 
 
-                        @foreach ($group[1]->itemDefacts as $index => $defact)
-                            <form class="defact-form">
-                                @csrf
-                                <input type="hidden" name="idItemDefact"
-                                    value="{{ $idItemDefactsArrayGroup1[$index] }}">
+                    @php
+                        $priority = ['BINTIK KOTOR', 'SCRATCH', 'TIPIS', 'MELER'];
 
-                                <input type="hidden" name="nameTypeDefact" value="{{ $group[1]->nameType }}">
-                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button id="count-button" type="submit"
-                                    class="bg-yellow-500 text-white hover:bg-yellow-600 py-5 w-full text-base font-semibold">
-                                    {{ $defact }}
-                                </x-button>
-                            </form>
-                        @endforeach
+                        $repaintDefacts = collect($group[1]->itemDefacts)
+                            ->map(function ($defact, $index) use ($idItemDefactsArrayGroup1) {
+                                return [
+                                    'defact' => $defact,
+                                    'id' => $idItemDefactsArrayGroup1[$index],
+                                ];
+                            })
+                            ->sortBy(function ($item) use ($priority) {
+                                $defactUpper = strtoupper($item['defact']);
+
+                                if ($defactUpper === 'OTHERS') {
+                                    return 1000; // Pastikan others paling bawah
+                                }
+
+                                $index = array_search($defactUpper, $priority);
+                                return $index !== false ? $index : 999;
+                            })
+                            ->values();
+                    @endphp
+
+
+                    @foreach ($repaintDefacts as $item)
+                        <form class="defact-form">
+                            @csrf
+                            <input type="hidden" name="idItemDefact" value="{{ $item['id'] }}">
+                            <input type="hidden" name="nameTypeDefact" value="{{ $group[1]->nameType }}">
+                            <input type="hidden" name="itemDefact" value="{{ $item['defact'] }}">
+                            <x-button id="count-button" type="submit"
+                                class="bg-yellow-500 text-white hover:bg-yellow-600 py-5 w-full text-base font-semibold">
+                                {{ $item['defact'] }}
+                            </x-button>
+                        </form>
+                    @endforeach
                     </div>
                 </div>
 
@@ -168,20 +212,43 @@
                     <h2 class="text-lg font-semibold mb-4">Out Total</h2>
                     <div class="grid grid-cols-2 md:grid-cols-2 gap-2">
 
-                        @foreach ($group[2]->itemDefacts as $index => $defact)
-                            <form class="defact-form">
-                                @csrf
-                                <input type="hidden" name="idItemDefact"
-                                    value="{{ $idItemDefactsArrayGroup2[$index] }}">
+                    @php
+                        $priority = ['BINTIK KOTOR', 'SCRATCH', 'TIPIS', 'MELER'];
 
-                                <input type="hidden" name="nameTypeDefact" value="{{ $group[2]->nameType }}">
-                                <input type="hidden" name="itemDefact" value="{{ $defact }}">
-                                <x-button id="count-button" type="submit"
-                                    class="bg-red-500 text-white hover:bg-red-600 py-5 w-full text-base font-semibold">
-                                    {{ $defact }}
-                                </x-button>
-                            </form>
-                        @endforeach
+                        $outTotalDefacts = collect($group[2]->itemDefacts)
+                            ->map(function ($defact, $index) use ($idItemDefactsArrayGroup2) {
+                                return [
+                                    'defact' => $defact,
+                                    'id' => $idItemDefactsArrayGroup2[$index],
+                                ];
+                            })
+                            ->sortBy(function ($item) use ($priority) {
+                                $defactUpper = strtoupper($item['defact']);
+
+                                if ($defactUpper === 'OTHERS') {
+                                    return 1000; // Taruh paling akhir
+                                }
+
+                                $index = array_search($defactUpper, $priority);
+                                return $index !== false ? $index : 999;
+                            })
+                            ->values();
+                    @endphp
+
+
+
+                    @foreach ($outTotalDefacts as $item)
+                        <form class="defact-form">
+                            @csrf
+                            <input type="hidden" name="idItemDefact" value="{{ $item['id'] }}">
+                            <input type="hidden" name="nameTypeDefact" value="{{ $group[2]->nameType }}">
+                            <input type="hidden" name="itemDefact" value="{{ $item['defact'] }}">
+                            <x-button id="count-button" type="submit"
+                                class="bg-red-500 text-white hover:bg-red-600 py-5 w-full text-base font-semibold">
+                                {{ $item['defact'] }}
+                            </x-button>
+                        </form>
+                    @endforeach
                     </div>
                 </div>
             </div>
